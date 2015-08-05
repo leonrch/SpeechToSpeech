@@ -1,7 +1,7 @@
 # SpeechToSpeech
 # Speech to Speech Browser Application
 
-  The [Speech to Speech][service_url] service uses IBM's speech recognition, machine translation, and voice synthesis capabilities to instantly translate speech to other language and speak the translation aloud.
+  The application uses IBM's speech recognition, machine translation, and voice synthesis capabilities to instantly translate speech to another language and read the translation aloud.
   
 Node.js is used to provide the browser client's authentication token.
 

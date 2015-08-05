@@ -1,0 +1,12 @@
+---
+declared-services:
+  speech-to-speech-service-standard:
+    label: speech_to_speech
+    plan: standard
+applications:
+- name: speech-to-speech-app
+  command: node app.js
+  path: .
+  memory: 256m
+  services:
+  - speech-to-text-service-standard-my-beautiful-bobo

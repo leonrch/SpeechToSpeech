@@ -1223,12 +1223,12 @@ var handleSelectedFile = exports.handleSelectedFile = (function() {
     // }
 
     $.publish('clearscreen');
-	$('#translation textarea').val('');    	 // L.R.
-	ttsChunks.length = 0;					 // L.R.
-	var ttsAudio = $('.audio-tts').get(0);	 // L.R.
-	ttsAudio.pause();						 // L.R.
-	inputSpeechOn = true;					 // L.R.
-	ttsChunksIndex = 0;						 // L.R.
+	$('#translation textarea').val('');    	 	// L.R.
+	ttsChunks.length = 0;					 	// L.R.
+	var ttsAudio = $('.audio-tts').get(0);	 	// L.R.
+	ttsAudio.pause();						 	// L.R.
+	inputSpeechOn = true;					 	// L.R.
+	ttsChunksIndex = 0;						 	// L.R.
 
     localStorage.setItem('currentlyDisplaying', true);
     running = true;

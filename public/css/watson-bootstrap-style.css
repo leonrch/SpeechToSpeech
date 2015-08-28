@@ -52,6 +52,7 @@ html {
   -ms-text-size-adjust: 100%;
   -webkit-text-size-adjust: 100%;
   overflow-y: scroll; 
+  overflow-x: hidden;
 }
 body {
   margin: 0;
@@ -339,7 +340,15 @@ body {
   line-height: 1.4;
   color: #121212; /*gray 90*/
   background-color: #fdfdfd; /*neutral 1*/
+  /*
+  background: url(../images/puzzle.jpg);
+  background-size: 830px 880px;
+  */
+  background: url(../images/viewfromplane.jpg);
+  background-size: 1680px 880px;
+
 }
+
 input,
 button,
 select,
@@ -353,11 +362,11 @@ textarea {
 textarea {
   padding: 1em;
   width: 100%;
-  height: 150px;
-  border: #fff;
+  height: 120px;
+  border: #aaff;
 }
 a {
-  color: #A53725; /*orange 70*/
+  color: #FEDF24;
   text-decoration: underline;
 }
 .no-underline
@@ -415,8 +424,8 @@ img {
 @media (min-width: 500px) {
   .service-icon {
   width: 130px;
-  margin-right: 1.5em;
-  margin-top: 1.5em;
+  margin-right: 1.2em;
+  margin-top: 0.5em;
   }
 }
 
@@ -523,7 +532,7 @@ h6 .small,
 }
 h1,
 .h1 {
-  font-size: 3.157em;
+  font-size: 3.02em;
 }
 h2,
 .h2 {
@@ -750,6 +759,7 @@ pre code {
   max-width: 340px;
   overflow-y: scroll;
 }
+
 .container {
   margin-right: auto;
   margin-left: auto;
@@ -767,7 +777,7 @@ pre code {
   }
 }
 @media (min-width: 1200px) {
-  .container {
+   .container {
     width: 992px;
   }
 }
@@ -1303,7 +1313,7 @@ pre code {
     width: 25%;
   }
   .col-lg-2 {
-    width: 16.666666666666664%;
+    width: 12%;
   }
   .col-lg-1 {
     width: 8.333333333333332%;
@@ -2133,9 +2143,9 @@ fieldset[disabled] .btn {
   color: #121212; /*gray 90*/
   background-color: transparent;
   border: 2px solid #c7c7c7; /*gray 20*/
-  width: 100%;
   text-align: left;
   padding: 1em;
+  margin-left: 1.5em;
 }
 .btn-default:hover,
 .btn-default:focus,
@@ -2529,10 +2539,12 @@ input[type="button"].btn-block {
     clear: both;
 }
 
+/*
 .dropdown {
   position: relative;
   width: 100%;
 }
+*/
 
 .dropdown-toggle:focus {
   outline: 0;
@@ -3179,6 +3191,7 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
 }
 .tab-content > .tab-pane {
   display: none;
+  line-height: initial;
 }
 .tab-content > .active {
   display: block;
@@ -4614,12 +4627,10 @@ a.list-group-item-danger.active:focus {
 .well {
   min-height: 20px;
   padding: 19px;
-  margin-bottom: 1em;
-background-color: #f4f4f4;
-  border: 2px solid #ececec;
+  margin-top: 2px;
+  background-color: #f4f4f4;
+  border: 1px solid #ececec;
   border-radius: 0px;
- // -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
- // box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
 }
 .well blockquote {
   border-color: #ddd;
@@ -5369,8 +5380,12 @@ button.close {
   }
 }
 h1 {
-  color: #325c80;
+  color: #616161;
   font-weight: 700;
+  margin-left: 2.3em;
+  margin-right: 1em;
+  width: 60em;
+  text-shadow: 3px 2px 0px #fff, 9px 8px 0px rgba(0,0,0,0.15);
 }
 h2 {
   color: #d74108;
@@ -5600,12 +5615,14 @@ table.table,
 }
 .dropdown-text{
   display: inline-block;
+  font-size: 16px;
+  color: #F0EDE9;
 }
 
 .caret {
-  position: absolute;
-  right: 1em;
-  top: 1.3em;
+  position: relative;
+  right: -0.5em;
+  top: 0.2em;
 }
 .info-block {
   background-color: #f4f4f4; /* Neutral 3*/

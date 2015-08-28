@@ -13,9 +13,11 @@
     <!-- top nav section -->
     <div class="navbar-wrapper">
 
-      <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+      <!-- <div class="navbar navbar-default navbar-fixed-top" role="navigation">
         <div class="container">
+	  -->
           <!-- IBM Watson Logo -->
+		  <!--
           <div class="navbar-header">
             <a class="navbar-brand no-underline" href="http://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/"><span class="thin-branding">IBM</span> Watson Developer Cloud</a>
           </div>
@@ -26,177 +28,166 @@
               <li><a href="http://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/gallery.html" class="no-underline">App Gallery</a></li>
               <li><a href="https://developer.ibm.com/watson/" class="no-underline">Community</a></li>
             </ul>
-          </div><!-- .navbar right-->
-        </div><!-- .container -->
-      </div><!-- .navbar -->
+          </div>
+		  -->
+	  <!--
+        </div> 
+      </div> 
+	  -->
 
     </div><!-- .navbar-wrapper -->
 
     <!-- Service Description Bar -->
-
-    <div class="header">
-      <div class="container">
-        <div class="col-lg-2 col-md-2 hidden-xs hidden-sm">
-          <img src="images/stt.svg" class="service-icon">
-        </div><!-- .col-lg-2 -->
-
-        <div class="col-lg-10 col-md-10 col-xs-12">
-          <h1>Speech to Speech</h1>
-        </div><!-- .col-lg-10 -->
-      </div><!-- .container -->
-    </div><!-- .header -->
     <!-- Step 1 Section-->
-    <div class="container">
-      <!-- Step 3 Section-->
-      <!-- First column of inputs -->
-      <div class="row">
-        <div class="col-lg-12 col-md-12 col-sm-12">
-          <h2>Transcribe Audio, Translate, Create Speech from Translation</h2>
-          <div class="col-lg-8 col-md-12 col-sm-12" style="float: none; width: auto;">
-            <p class="help-block" style="padding-right: 3em;">Use your microphone (compatible only with <a href="https://www.google.com/intl/en/chrome/browser/desktop/">Google Chrome</a> and <a href="https://www.mozilla.org/en-US/firefox/new/">Mozilla Firefox</a>), upload pre-recorded audio (WAV containing uncompressed audio or FLAC file formats), drag and drop recorded audio onto the page, or use the audio samples provided. Select the target language you would like to translate to. Click audio player buttons: &#9654;/&#x025FC; at the bottom of <b>Translation</b> pane to play/stop the translation.
-			<br><br>
-			<a href="https://github.com/leonrch/SpeechToSpeech">Fork on Github</a>
+	<div class="container">
+        <div class="col-lg-2 col-md-2 hidden-xs hidden-sm">
+          <!--<img src="images/stt.svg" class="service-icon"> -->
+		 <img src="images/world.png" class="service-icon">
+		  <!-- <img src="images/dilbert.jpg" class="service-icon"> -->
+        </div>
+	    <div class="col-lg-10 col-md-10 col-xs-12" style="opacity:1.0;">
+          <h1>Speech to Speech</h1>
+        </div>
+	  <!-- Step 3 Section-->
+	  <!-- First column of inputs -->
+	  <div class="row">
+		<div class="col-lg-12 col-md-12 col-sm-12" style="background: url('../images/earth.jpg') no-repeat; background-size: 100% 100%;">
+		  <!-- <h2>Transcribe Audio, Translate, Create Speech from Translation</h2> -->
+		  <div class="col-lg-8 col-md-12 col-sm-12" style="float: none; width: auto;">
+			<p class="help-block" style="padding-left:2em; font-size: 110%; padding-right: 3em; color: #F4E4C7;">Use your microphone (compatible only with <a href="https://www.google.com/intl/en/chrome/browser/desktop/">Google Chrome</a> and <a href="https://www.mozilla.org/en-US/firefox/new/">Mozilla Firefox</a>), upload pre-recorded audio (uncompressed WAV or FLAC file formats), drag and drop audio file onto the page, or use the audio samples provided. Select the target language you would like to translate to. Use &#9654;/&#x025FC; buttons to play/stop the translation.
+			<b><a href="https://github.com/leonrch/SpeechToSpeech">Fork on Github</a></b> 
 			</p>
- 		  </div><!-- .col-lg-8 -->
-		  		  
-		  <div class="col-lg-4 col-md-6 col-sm-12" style="margin-right: 32px;">
-            <div class="dropdown">
-              <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
-              <span id="dropdownMenuDefault" class="dropdown-text">US English broadband model (16KHz) </span>
-              <span class="caret"></span>
-              </button>
-              <ul id="dropdownMenuList" class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-              </ul>
-            </div>
-          </div><!-- .col-lg-6 -->
-		  
-          <div class="col-lg-4 col-md-12 col-sm-12">
-            <div class="dropdown">
-				<button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuInput" data-toggle="dropdown" aria-expanded="true">
-				<span id="dropdownMenuTargetLanguageDefault" class="dropdown-text">Choose Target Language</span>
-				<span class="caret"></span>
-				</button>
-				<ul id="dropdownMenuTargetLanguage" class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu2" id="ulTargetLang">
-					<!--
-					<li role="presentation"><a role="menuitem" tabindex="0">English</a></li>
-					<li role="presentation"><a role="menuitem" tabindex="1">French</a></li>
-					<li role="presentation"><a role="menuitem" tabindex="2">Spanish</a></li>
-					-->
-				</ul>
+		  </div><!-- .col-lg-8 -->
+			
+          <div class="col-lg-4 col-md-12 col-sm-12">			
+			  <div class="dropdown">
+				  <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
+					  <span id="dropdownMenuDefault" class="dropdown-text">Choose Your Language</span>
+					  <span class="caret"></span>
+				  </button>
+				  <ul id="dropdownMenuList" class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+				  </ul>
+			  </div>
+		  </div>
+          <div class="col-lg-4 col-md-12 col-sm-12">			
+			  <div class="dropdown">
+				  <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuInput" data-toggle="dropdown" aria-expanded="true">
+					  <span id="dropdownMenuTargetLanguageDefault" class="dropdown-text">Choose Target Language</span>
+						<span class="caret"></span>
+				  </button>
+				  <ul id="dropdownMenuTargetLanguage" class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu2" id="ulTargetLang">
+				  </ul>
+			   </div>
+		  </div>
+
+		</div><!-- .col-lg-12 -->
+        
+		<div class="row">
+		  <div class="col-lg-12 col-md-12 col-sm-12">
+			<div class="audioParent">
+			  <audio style="display:none" class="audio" controls>
+				Your browser does not support the audio element.
+			  </audio>
 			</div>
-          </div>
-        </div>
-
-        </div><!-- .col-lg-12 -->
-
-        <div class="row">
-          <div class="col-lg-12 col-md-12 col-sm-12">
-            <div class="audioParent">
-              <audio style="display:none" class="audio" controls>
-                Your browser does not support the audio element.
-              </audio>
-            </div>
-          </div>
-        </div><!-- row -->
+		  </div>
+		</div><!-- row -->
 
 
-        <div class="row">
-          <nav class="navbar navbar-inverse">
-          <ul class="navbar-text">
-            <li id="recordButton" class="button-row nav-inverse-color">
-            <img id="microphoneIcon" src="images/microphone.svg" class="icon">
-            <span class="nav-label">Record Audio</span>
-            </li>
-            <li class="file-upload button-row nav-inverse-color">
-            <div id="fileUploadTarget">
-              <img src="images/upload.svg" class="icon"></img>
-              <span class="nav-label">Select File</span>
-            </div>
-            </li>
-            <li class="play-sample-1 button-row nav-inverse-color">
-            <img src="images/play.svg" class="icon">
-            <span class="nav-label">Play Sample 1</span>
-            </li>
-            <li class="play-sample-2 button-row nav-inverse-color">
-            <img src="images/play.svg" class="icon">
-            <span class="nav-label">Play  Sample 2</span>
-            </li>
-          </ul>
+		<div class="row">
+		  <nav class="navbar navbar-inverse">
+		  <ul class="navbar-text">
+			<li id="recordButton" class="button-row nav-inverse-color">
+			<img id="microphoneIcon" src="images/microphone.svg" class="icon">
+			<span class="nav-label">Record Audio</span>
+			</li>
+			<li class="file-upload button-row nav-inverse-color">
+			<div id="fileUploadTarget">
+			  <img src="images/upload.svg" class="icon"></img>
+			  <span class="nav-label">Select File</span>
+			</div>
+			</li>
+			<li class="play-sample-1 button-row nav-inverse-color">
+			<img src="images/play.svg" class="icon">
+			<span class="nav-label">Play Sample 1</span>
+			</li>
+			<li class="play-sample-2 button-row nav-inverse-color">
+			<img src="images/play.svg" class="icon">
+			<span class="nav-label">Play  Sample 2</span>
+			</li>
+		  </ul>
 
-          </nav>
-        </div>
+		  </nav>
+		</div>
 
-        <!-- Tab panes -->
-        <div class="row" style="  margin: 0;"> 
-          <div class="col-lg-12 col-md-12 col-sm-12" style="padding: 0;">
-            <div class="well">
-              <form autocomplete="off" class="form-horizontal">
-                <div role="tabpanel">
+		<!-- Tab panes -->
+		<div class="row" style="  margin: 0;"> 
+		  <div class="col-lg-12 col-md-12 col-sm-12" style="padding: 0;">
+			<div class="well">
+			  <form autocomplete="off" class="form-horizontal">
+				<div role="tabpanel">
 
-                  <!-- Nav tabs -->
-                  <ul class="nav nav-tabs" role="tablist">
-                    <li role="presentation" class="active"><a href="#home2" aria-controls="home" role="tab" data-toggle="tab">Text</a></li>
-                    <li role="presentation"><a href="#profile2" aria-controls="profile" role="tab" data-toggle="tab">JSON</a></li>
-                  </ul> 
+				  <!-- Nav tabs -->
+				  <ul class="nav nav-tabs" role="tablist">
+					<li role="presentation" class="active"><a href="#home2" aria-controls="home" role="tab" data-toggle="tab">Text</a></li>
+					<!-- <li role="presentation"><a href="#profile2" aria-controls="profile" role="tab" data-toggle="tab">JSON</a></li> -->
+				  </ul> 
 
-                  <div class="hr-tab"></div>
+				  <div class="hr-tab"></div>
 
-                  <fieldset>
+				  <fieldset>
 
-                    <div class="row error-row">
-                      <div class="col-lg-12">
-                        <div id="errorAlert" >
-                          <span id="errorMessage"></span>
-                          <a class="pull-right" href="#" id="errorClose">&times;</a>
-                        </div>
-                      </div>
-                    </div>
+					<div class="row error-row">
+					  <div class="col-lg-12">
+						<div id="errorAlert" >
+						  <span id="errorMessage"></span>
+						  <a class="pull-right" href="#" id="errorClose">&times;</a>
+						</div>
+					  </div>
+					</div>
 
-                    <div class="row notification-row">
-                      <div class="col-lg-12">
-                        <div id="notificationAlert" >
-                          <span id="notificationMessage"></span>
-                          <a class="pull-right" href="#" id="notificationClose">&times;</a>
-                        </div>
-                      </div>
-                    </div>
+					<div class="row notification-row">
+					  <div class="col-lg-12">
+						<div id="notificationAlert" >
+						  <span id="notificationMessage"></span>
+						  <a class="pull-right" href="#" id="notificationClose">&times;</a>
+						</div>
+					  </div>
+					</div>
 
 
-                    <div class="form-group row tabpanel-row">
-                      <div class="col-lg-12">
-                        <div class="tab-content">
-                          <div role="tabpanel" class="tab-pane active" id="home2">
-                            <textarea readonly id="resultsText"></textarea>
-                          </div>
-                          <div role="tabpanel" class="tab-pane" id="profile2">
-                            <textarea readonly id="resultsJSON"></textarea>
-                          </div>
-                        </div>
-                      </div><!-- .col-lg-12 -->
-                    </div>
-                  </fieldset>
-                </div>
-              </form>
-            </div>
-          </div><!-- /.well -->
-        </div><!-- /.tabpanel -->
+					<div class="form-group row tabpanel-row">
+					  <div class="col-lg-12">
+						<div class="tab-content">
+						  <div role="tabpanel" class="tab-pane active" id="home2">
+							<textarea readonly id="resultsText"></textarea>
+						  </div>
+						</div>
+					  </div><!-- .col-lg-12 -->
+					</div>
+				  </fieldset>
+				</div>
+			  </form>
+			</div>
+		  </div><!-- /.well -->
+		</div><!-- /.tabpanel -->
 
+		
 		<div class="well">
-            <div role="tabpanel">
-                <ul class="nav nav-tabs" role="tablist">
-                    <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">Translation</a></li>
+			<div role="tabpanel">
+				<ul class="nav nav-tabs" role="tablist">
+					<li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">Translation</a></li>
 				</ul>
 				<div class="hr-tab"></div>
 				<fieldset>
 					<div class="col-lg-12">
 						<div class="tab-content">
 							<div role="tabpanel" class="tab-pane active" id="translation">
-								<textarea></textarea>
+								<textarea readonly></textarea>
 							</div>
-							<button class="row" id="playTTS">
+							<button id="playTTS">
 								<span>&#9654;</span>
 							</button>
-							<button class="row" id="stopTTS">
+							<button id="stopTTS">
 								<span>&#x025FC;</span>
 							</button>
 						</div>
@@ -206,11 +197,12 @@
 		</div>
 		
 		<audio class="audio-tts" style="display:none">
-            Your browser does not support the audio element.
-        </audio>
+			Your browser does not support the audio element.
+		</audio>
 
-      </div><!-- /.container -->
+	  </div><!-- /.container -->
 
+      </div>		  
       <!-- for file upload dialog in toolbar -->
       <input style="display:none" type="file" id="fileUploadDialog">
 

@@ -68,9 +68,12 @@ input[type="radio"], input[type="checkbox"] {
   float: left;
 }
 
+
 .dropdown {
-  width: 105% !important;
+  width: 60em;
+  margin-left: 1em;
 }
+
 
 #dropdownMenu1 {
   margin-bottom: 2em;
@@ -171,5 +174,6 @@ li ul {margin-top:6px;}
 ol ol li:last-child {margin-bottom:0;}
 
 .service-icon {
-  width: 100%;
+  width: 90%;
+  margin-left:40px;
 }

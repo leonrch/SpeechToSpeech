@@ -24,7 +24,7 @@
 	  <div class="row">
 	  	<div class="col-lg-12 col-md-12 col-sm-12 intro-copy">
 	  		<div class="col-lg-10 col-lg-push-1 col-md-12 col-sm-12">
-					<p class="help-block">Use your microphone (compatible only with <a href="https://www.google.com/intl/en/chrome/browser/desktop/">Google Chrome</a> and <a href="https://www.mozilla.org/en-US/firefox/new/">Mozilla Firefox</a>), upload pre-recorded audio file (uncompressed 16 KHz mono WAV or FLAC) or drag and drop selected audio file onto the page. Try the audio samples provided. Select the target language you would like to translate to. Use &#9654;/&#x025FC; to play/stop the translation.
+					<p class="help-block">Use your microphone (compatible only with <a href="https://www.google.com/intl/en/chrome/browser/desktop/">Google Chrome</a> and <a href="https://www.mozilla.org/en-US/firefox/new/">Mozilla Firefox</a>), upload pre-recorded audio (uncompressed WAV or FLAC file formats), drag and drop audio file onto the page, or use the audio samples provided. Select the target language you would like to translate to. Use &#9654;/&#x025FC; buttons to play/stop the translation.
 					<a href="https://github.com/leonrch/SpeechToSpeech">Fork on Github</a> 
 					</p>
 				</div><!-- .col-lg-8 -->

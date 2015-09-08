@@ -17,6 +17,20 @@
   cursor: pointer;
 }
 
+.main-header {
+  text-align: center;
+  z-index: 100;
+}
+
+.intro-copy {
+  text-align: center;
+  background-color: rgba(255,255,255,.75);
+}
+
+.main-header h1 {
+  color: #121212;
+}
+
 .navbar-text {
   overflow: hidden;
   white-space: nowrap;
@@ -32,6 +46,33 @@
   float: left;
 }
 
+
+@media screen and (max-width: 768px) {
+  .col-sm-12 .btn-default {
+    width: 100%;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .dropdown {
+    display: inline-block;
+    position: relative;
+    width: 100%;
+  }
+  .dropdown-menu {
+    width: 100%;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .dropdown {
+    width: 250px;
+    display: inline-block;
+    position: relative;
+  }
+}
+
+
 @media (min-width: 500px) {
   .nav-inverse-color {
     width: 50%;
@@ -40,7 +81,7 @@
 
 @media (min-width: 730px) {
   .nav-inverse-color {
-    width: 25%;
+    width: 50%;
   }
 }
 
@@ -48,6 +89,13 @@
   .service-icon {
     display: none;
   }
+}
+
+button#playTTS, 
+button#stopTTS {
+  background-color: #2f76bb;
+  border: 0;
+  color: white;
 }
 
 input[type="radio"], input[type="checkbox"] {
@@ -67,13 +115,6 @@ input[type="radio"], input[type="checkbox"] {
   clear: both;
   float: left;
 }
-
-
-.dropdown {
-  width: 60em;
-  margin-left: 1em;
-}
-
 
 #dropdownMenu1 {
   margin-bottom: 2em;
@@ -131,6 +172,10 @@ progress {
 
 .nav-label {
   color: white;
+}
+
+span.nav-label {
+  top: 2px;
 }
 
 /* numbered bullets solution from: */

@@ -1031,7 +1031,9 @@ ttsAudio.addEventListener('ended', playTTSChunk);
 
 function playTTSifInputSpeechIsOff() {
 	clearTimeout(timerID);
-	if(inputSpeechOn == true || ttsAudio.paused == false) {
+	var streaming = $('#microphone_streaming').prop('checked');
+	
+	if(streaming== false && inputSpeechOn == true || ttsAudio.paused == false) {
 		timerID = setTimeout(playTTSifInputSpeechIsOff, 100);
 		timerStarted = true;
 	}
@@ -1734,4 +1736,4 @@ exports.initShowTab = function() {
   });
 
 }
-},{}]},{},[5]);
+

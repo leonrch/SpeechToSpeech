@@ -141,11 +141,11 @@ Microphone.prototype.stop = function() {
   if (!this.recording)
     return;
   this.recording = false;
-  this.stream.stop();
+  // this.stream.stop();
   this.requestedAccess = false;
   this.mic.disconnect(0);
   this.mic = null;
-  this.onStopRecording();
+  this.onStopRecording(); 
 };
 
 /**
@@ -260,6 +260,20 @@ module.exports = Microphone;
 },{"./utils":7}],2:[function(require,module,exports){
 module.exports={
    "models": [
+      {
+         "url": "https://stream.watsonplatform.net/speech-to-text/api/v1/models/ar-AR_BroadbandModel", 
+         "rate": 16000, 
+         "name": "ar-AR_BroadbandModel", 
+         "language": "ar-AR", 
+         "description": "Arabic" 
+      }, 
+	  {
+         "url": "https://stream.watsonplatform.net/speech-to-text/api/v1/models/pt-BR_BroadbandModel",
+         "rate": 16000,
+         "name": "pt-BR_BroadbandModel",
+         "language": "pt-BR",
+         "description": "Brazilian Portuguese"
+      },
       {
          "url": "https://stream.watsonplatform.net/speech-to-text/api/v1/models/en-US_BroadbandModel", 
          "rate": 16000, 
@@ -918,6 +932,8 @@ function getVoice() {
 		voice = 'fr-FR_ReneeVoice';
 	else if(mt_target == 'es')
 		voice = 'es-US_SofiaVoice';   // TODO: try 'es-ES_EnriqueVoice' or 'es-ES_LauraVoice'
+	else if(mt_target == 'pt')
+		voice = 'pt-BR_IsabelaVoice';
 	return voice;
 }
 
@@ -938,6 +954,8 @@ function getTargetLanguageCode() {
 	    mt_target = 'fr';
 	else if( lang == 'Spanish' )
 	    mt_target = 'es';
+	else if( lang == 'Portuguese' )
+	    mt_target = 'pt';
 	return mt_target;
 }
 
@@ -1383,12 +1401,14 @@ var effects = require('./effects');
 
 
 var LOOKUP_TABLE = {
+  'ar-AR_BroadbandModel': ['ar-AR_Broadband_sample1.wav', 'ar-AR_Broadband_sample2.wav'],
   'en-US_BroadbandModel': ['Us_English_Broadband_Sample_1.wav', 'Us_English_Broadband_Sample_2.wav'],
   'en-US_NarrowbandModel': ['Us_English_Narrowband_Sample_1.wav', 'Us_English_Narrowband_Sample_2.wav'],
   'es-ES_BroadbandModel': ['Es_ES_spk24_16khz.wav', 'Es_ES_spk19_16khz.wav'],
   'es-ES_NarrowbandModel': ['Es_ES_spk24_8khz.wav', 'Es_ES_spk19_8khz.wav'],
   'ja-JP_BroadbandModel': ['sample-Ja_JP-wide1.wav', 'sample-Ja_JP-wide2.wav'],
-  'ja-JP_NarrowbandModel': ['sample-Ja_JP-narrow3.wav', 'sample-Ja_JP-narrow4.wav']
+  'ja-JP_NarrowbandModel': ['sample-Ja_JP-narrow3.wav', 'sample-Ja_JP-narrow4.wav'],
+  'pt-BR_BroadbandModel': ['pt-BR_Sample1-16KHz.wav', 'pt-BR_Sample2-16KHz.wav']
 };
 
 var playSample = (function() {
@@ -1616,14 +1636,20 @@ exports.initSelectModel = function(ctx) {
 	var list = $("#dropdownMenuTargetLanguage");
 	list.empty();
 	if(currentModel == 'en-US_BroadbandModel') {
-		list.append("<li role='presentation'><a role='menuitem' tabindex='0'>English</a></li>");
-		list.append("<li role='presentation'><a role='menuitem' tabindex='1'>French</a></li>");
+		list.append("<li role='presentation'><a role='menuitem' tabindex='0'>French</a></li>");
+		list.append("<li role='presentation'><a role='menuitem' tabindex='1'>Portuguese</a></li>");
 		list.append("<li role='presentation'><a role='menuitem' tabindex='2'>Spanish</a></li>");
 	}
-	else { // Spanish 
+	else if(currentModel == 'ar-AR_BroadbandModel') { 
 		list.append("<li role='presentation'><a role='menuitem' tabindex='0'>English</a></li>");
-		list.append("<li role='presentation'><a role='menuitem' tabindex='2'>Spanish</a></li>");
 	}
+	else if(currentModel == 'es-ES_BroadbandModel') { 
+		list.append("<li role='presentation'><a role='menuitem' tabindex='0'>English</a></li>");
+	}
+	else if(currentModel == 'pt-BR_BroadbandModel') { 
+		list.append("<li role='presentation'><a role='menuitem' tabindex='0'>English</a></li>");
+	}
+	
   }
   
   $("#dropdownMenuList").click(function(evt) {
@@ -1637,6 +1663,14 @@ exports.initSelectModel = function(ctx) {
 	$("#dropdownMenuTargetLanguage").empty();
     $('#dropdownMenu1').dropdown('toggle');
     localStorage.setItem('currentModel', newModel);
+	
+	// HACK: just for now because these 3 source languages have only 1 target language, which is English
+	if( newModel == "ar-AR_BroadbandModel" ||
+		newModel == "pt-BR_BroadbandModel" ||
+		newModel == "es-ES_BroadbandModel") {
+		$('#dropdownMenuTargetLanguageDefault').text("English");
+	}
+
     ctx.currentModel = newModel;
     initPlaySample(ctx);
     $.publish('clearscreen');
@@ -1651,8 +1685,8 @@ exports.initSelectModel = function(ctx) {
   });
 
   function isSelectedlanguageValid(lang) {
-	if(lang == "English" || lang == "French" || lang == "Spanish")
-	   return true;
+	if(lang == "English" || lang == "French" || lang == "Spanish" || lang == "Portuguese")
+		return true;
 	return false;
   }
   
@@ -1736,4 +1770,4 @@ exports.initShowTab = function() {
   });
 
 }
-
+},{}]},{},[5]);

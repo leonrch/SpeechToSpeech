@@ -6,6 +6,7 @@ declared-services:
 applications:
 - name: speech-to-speech-app
   command: node app.js
+  buildpack: sdk-for-nodejs
   path: .
   memory: 256m
   services:

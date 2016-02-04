@@ -1,7 +1,7 @@
 {
-  "name": "SpeechToTextBrowserStarterApp",
+  "name": "SpeechToSpeechBrowserDemoApp",
   "version": "0.2.1",
-  "description": "A sample browser app for Bluemix that use the speech-to-text service, fetching a token via Node.js",
+  "description": "A sample browser application for Bluemix that use the speech-to-text, language-translation, and text-to-speech services",
   "dependencies": {
     "body-parser": "^1.13.2",
     "connect": "~3.3.5",
@@ -17,7 +17,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/watson-developer-cloud/speech-to-text-browser.git"
+    "url": "https://github.com/leonrch/SpeechToSpeech"
   },
   "author": "IBM Corp.",
   "browserify-shim": {
@@ -30,25 +30,16 @@
   },
   "contributors": [
     {
-      "name": "German Attanasio Ruiz",
-      "email": "germanatt@us.ibm.com"
+      "name": "Leonid Rachevsky",
+      "email": "rachevsk@us.ibm.com"
     },
     {
-      "name": "Daniel Bolano",
-      "email": "dbolano@us.ibm.com"
-    },
-    {
-      "name": "Britany L. Ponvelle",
-      "email": "blponvelle@us.ibm.com"
-    },
-    {
-      "name": "Eric S. Bullington",
-      "email": "esbullin@us.ibm.com"
+      "name": "Rachel N. White",
+      "email": "whiter@us.ibm.com"
     }
   ],
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/watson-developer-cloud/speech-to-text-browser/issues"
   },
   "scripts": {
     "start": "node app.js",

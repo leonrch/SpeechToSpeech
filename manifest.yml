@@ -11,3 +11,7 @@ applications:
   memory: 256m
   services:
   - speech-to-text-service-standard
+  - language-translation-service
+  - text-to-speech-service
+  
+  

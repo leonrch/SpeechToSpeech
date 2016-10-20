@@ -154,7 +154,8 @@ See the full [Getting Started][getting_started] documentation for more details, 
 	app.use (function (req, res, next) {
 		if (req.secure) {
 			next();
-		} else {
+		} 
+		else {
 			res.redirect('https://' + req.headers.host + req.url);
 		}
 	}); 

@@ -39,6 +39,7 @@ var config = {
 var credentials = extend(config, bluemix.getServiceCreds('speech_to_text'));
 var authorization = watson.authorization(credentials);
 
+// redirect to https if the app is not running locally
 if (!!process.env.VCAP_SERVICES) {
   app.enable('trust proxy');
   app.use (function (req, res, next) {

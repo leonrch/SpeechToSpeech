@@ -1010,16 +1010,21 @@ function translate(textContent) {
 var ttsAudio = $('.audio-tts').get(0);
 
 $('#playTTS').click(function() {
-	var downloadURL = '/synthesize' +
-	  '?voice=' + getVoice() +
-	  '&text=' + encodeURIComponent($('#translation textarea').val()) +
-	  '&X-WDC-PL-OPT-OUT=0';
-	
-	ttsAudio.currentTime = 0;
-	ttsAudio.pause();
-    ttsAudio.src = downloadURL;
-	ttsAudio.load();
-	ttsAudio.play();
+  var textContent = $('#resultsText').val();
+  $('#translation textarea').val('');
+  translate(textContent);
+  
+  /*
+  var downloadURL = '/synthesize' + '?voice=' + getVoice() +
+    '&text=' + encodeURIComponent($('#translation textarea').val()) +
+    '&X-WDC-PL-OPT-OUT=0';
+  
+  ttsAudio.currentTime = 0;
+  ttsAudio.pause();
+  ttsAudio.src = downloadURL;
+  ttsAudio.load();
+  ttsAudio.play();
+  */
 });
 
 $('#stopTTS').click(function() {

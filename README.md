@@ -51,6 +51,9 @@ Give it a try! Click the button below to fork into IBM DevOps Services and deplo
   ```sh
   $ cf push
   ```
+  
+9. Make sure the application is running. Type https://<application-name>.mybluemix.net in the address bar of 
+   your browser. 
 
 See the full [Getting Started][getting_started] documentation for more details, including code snippets and references.
 

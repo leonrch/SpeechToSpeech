@@ -148,7 +148,7 @@ See the full [Getting Started][getting_started] documentation for more details, 
     ```
     You need to copy `lt-username`, `lt-password`, `stt-username`, `stt-password`, `tts-username` and `tts-password`.
 
-2. Comment out the following code responsible for http -> https redirection:
+2. Comment out the following app.js code responsible for http -> https redirection (lines 42-50):
 	```js
 	app.enable('trust proxy');
 	app.use (function (req, res, next) {
@@ -159,7 +159,7 @@ See the full [Getting Started][getting_started] documentation for more details, 
 		}
 	}); 
 	```
-
+	
 3. Install [Node.js](http://nodejs.org/)
 
 4. To install project dependencies, go to the project folder in a terminal and run:

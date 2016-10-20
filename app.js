@@ -40,15 +40,15 @@ var credentials = extend(config, bluemix.getServiceCreds('speech_to_text'));
 var authorization = watson.authorization(credentials);
 
 if (!!process.env.VCAP_SERVICES) {
-	app.enable('trust proxy');
-	app.use (function (req, res, next) {
-		if (req.secure) {
-			next();
-		} 
-		else {
-			res.redirect('https://' + req.headers.host + req.url);
-		}
-	});
+  app.enable('trust proxy');
+  app.use (function (req, res, next) {
+    if (req.secure) {
+      next();
+    } 
+    else {
+      res.redirect('https://' + req.headers.host + req.url);
+    }
+  });
 }
 
 // Setup static public directory

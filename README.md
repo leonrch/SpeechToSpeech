@@ -19,13 +19,27 @@ Give it a try! Click the button below to fork into IBM DevOps Services and deplo
 
 3. Edit the `manifest.yml` file and change the `<application-name>` to something unique.
   ```none
-  applications:
-  - services:
-    - speech-to-speech-service-standard
-    name: <application-name>
-    command: node app.js
-    path: .
-    memory: 256M
+---
+declared-services:
+  speech-to-text-service-standard:
+    label: speech_to_text
+    plan: standard
+  language-translation-service:
+    label: language_translation
+    plan: standard
+  text-to-speech-service:
+    label: text_to_speech
+    plan: standard	
+applications:
+- name: <application name>
+  command: node app.js
+  buildpack: sdk-for-nodejs
+  path: .
+  memory: 256m
+  services:
+  - speech-to-text-service-standard
+  - language-translation-service
+  - text-to-speech-service
   ```
   The name you use will determinate your application url initially, e.g. `<application-name>.mybluemix.net`.
 
@@ -33,7 +47,8 @@ Give it a try! Click the button below to fork into IBM DevOps Services and deplo
 
 5. Install project dependencies and build browser application:
   ```sh
-  $ npm install && npm run build
+  $ npm install
+  $ npm build
   ```
 
 6. Connect to Bluemix in the command line tool.
@@ -42,9 +57,11 @@ Give it a try! Click the button below to fork into IBM DevOps Services and deplo
   $ cf login -u <your user ID>
   ```
 
-7. Create the Speech to Speech service in Bluemix.
+7. Create the following three services in Bluemix.
   ```sh
-  $ cf create-service speech_to_speech standard speech-to-speech-service-standard
+  $ cf create-service speech_to_text standard speech-to-text-service-standard
+  $ cf create-service text_to_speech standard text-to-speech-service
+  $ cf create-service language_translation standard language-translation-service
   ```
 
 8. Push it live!

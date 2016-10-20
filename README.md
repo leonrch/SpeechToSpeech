@@ -68,64 +68,117 @@ applications:
   ```sh
   $ cf push
   ```
-
 See the full [Getting Started][getting_started] documentation for more details, including code snippets and references.
 
 ## Running locally
 
   The application uses [Node.js](http://nodejs.org/) and [npm](https://www.npmjs.com/) so you will have to download and install them as part of the steps below.
 
-1. Copy the credentials from your `speech-to-speech-service-standard` service in Bluemix to `app.js`, you can see the credentials using:
+1. Copy the credentials from your `speech-to-text-service-standard`, `language-translation-service`,
+   `text-to-speech-service` services in Bluemix to `app.js`, you can see the credentials using:
 
     ```sh
     $ cf env <application-name>
     ```
     Example output:
     ```sh
-    System-Provided:
-    {
-    "VCAP_SERVICES": {
-      "speech_to_speech": [{
-          "credentials": {
-            "url": "<url>",
-            "password": "<password>",
-            "username": "<username>"
-          },
-        "label": "speech-to-speech",
-        "name": "speech-to-speech-service-standard",
-        "plan": "standard"
-     }]
-    }
-    }
+	System-Provided:
+	{
+	 "VCAP_SERVICES": {
+	  "language_translation": [
+	   {
+		"credentials": {
+		 "password": "lt-password",
+		 "url": "https://gateway.watsonplatform.net/language-translation/api",
+		 "username": "lt-username"
+		},
+		"label": "language_translation",
+		"name": "language-translation-service",
+		"plan": "standard",
+		"provider": null,
+		"syslog_drain_url": null,
+		"tags": [
+		 "watson",
+		 "ibm_created",
+		 "ibm_dedicated_public",
+		 "ibm_deprecated"
+		]
+	   }
+	  ],
+	  "speech_to_text": [
+	   {
+		"credentials": {
+		 "password": "stt-password",
+		 "url": "https://stream.watsonplatform.net/speech-to-text/api",
+		 "username": "stt-username"
+		},
+		"label": "speech_to_text",
+		"name": "speech-to-text-service-standard",
+		"plan": "standard",
+		"provider": null,
+		"syslog_drain_url": null,
+		"tags": [
+		 "watson",
+		 "ibm_created",
+		 "ibm_dedicated_public"
+		]
+	   }
+	  ],
+	  "text_to_speech": [
+	   {
+		"credentials": {
+		 "password": "tts-password",
+		 "url": "https://stream.watsonplatform.net/text-to-speech/api",
+		 "username": "tts-username"
+		},
+		"label": "text_to_speech",
+		"name": "text-to-speech-service",
+		"plan": "standard",
+		"provider": null,
+		"syslog_drain_url": null,
+		"tags": [
+		 "watson",
+		 "ibm_created",
+		 "ibm_dedicated_public"
+		]
+	   }
+	  ]
+	 }
+	}
     ```
+    You need to copy `lt-username`, `lt-password`, `stt-username`, `stt-password`, `tts-username` and `tts-password`.
 
-    You need to copy `username`, `password` and `url`.
+2. Comment out the following code responsible for http -> https redirection:
+	```js
+	app.enable('trust proxy');
+	app.use (function (req, res, next) {
+		if (req.secure) {
+			next();
+		} else {
+			res.redirect('https://' + req.headers.host + req.url);
+		}
+	}); 
+	```
 
-2. Install [Node.js](http://nodejs.org/)
+3. Install [Node.js](http://nodejs.org/)
 
-3. To install project dependencies, go to the project folder in a terminal and run:
+4. To install project dependencies, go to the project folder in a terminal and run:
     ```sh
     $ npm install
     ```
 
-4. Then, build the browser application using Browserify:
+5. Then, build the browser application:
 
-    * To build with debugging enabled, and rebuild if the app is changed:
     ```sh
-    $ npm run watch
-    ```
-    
-    * To simply build the application without debugging or file-change monitoring:
-    ```sh
-    $ npm run build
+    $ npm build
     ```
 
-5. Start the application:
+6. Start the application:
     ```sh
     $ node app.js
     ```
 
-6. Go to: [http://localhost:3000](http://localhost:3000)
+7. Go to: [http://localhost:3000](http://localhost:3000)
 
 ## Troubleshooting
 

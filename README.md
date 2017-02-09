@@ -24,7 +24,7 @@ declared-services:
   speech-to-text-service-standard:
     label: speech_to_text
     plan: standard
-  language-translation-service:
+  language-translator-service:
     label: language_translation
     plan: standard
   text-to-speech-service:
@@ -38,7 +38,7 @@ applications:
   memory: 256m
   services:
   - speech-to-text-service-standard
-  - language-translation-service
+  - language-translator-service
   - text-to-speech-service
   ```
   The name you use will determinate your application url initially, e.g. `<application-name>.mybluemix.net`.
@@ -61,7 +61,7 @@ applications:
   ```sh
   $ cf create-service speech_to_text standard speech-to-text-service-standard
   $ cf create-service text_to_speech standard text-to-speech-service
-  $ cf create-service language_translation standard language-translation-service
+  $ cf create-service language_translation standard language-translator-service
   ```
 
 8. Push it live!
@@ -74,7 +74,7 @@ See the full [Getting Started][getting_started] documentation for more details, 
 
   The application uses [Node.js](http://nodejs.org/) and [npm](https://www.npmjs.com/) so you will have to download and install them as part of the steps below.
 
-1. Copy the credentials from your `speech-to-text-service-standard`, `language-translation-service`,
+1. Copy the credentials from your `speech-to-text-service-standard`, `language-translator-service`,
    `text-to-speech-service` services in Bluemix to `app.js`, you can see the credentials using:
 
     ```sh
@@ -93,7 +93,7 @@ See the full [Getting Started][getting_started] documentation for more details, 
 		 "username": "lt-username"
 		},
 		"label": "language_translation",
-		"name": "language-translation-service",
+		"name": "language-translator-service",
 		"plan": "standard",
 		"provider": null,
 		"syslog_drain_url": null,

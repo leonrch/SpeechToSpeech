@@ -31,8 +31,8 @@ var express = require('express'),
 var config = {
   version: 'v1',
   url: 'https://stream.watsonplatform.net/speech-to-text/api',
-  username: 'user name to access STT service',
-  password: 'password to access STT service'
+  username: 'f84db575-8fd5-4e4d-968a-4f97e0833a05',
+  password: 'hK1A4PCy1s6O'
 };
 
 // if bluemix credentials exists, then override local
@@ -71,9 +71,10 @@ app.get('/token', function(req, res) {
 app.use(bodyParser.urlencoded({ extended: false }));
 
 var mt_credentials = extend({
-  url: 'https://gateway.watsonplatform.net/language-translation/api',
-  username: 'user name to access MT service',
-  password: 'password to access MT service',
+	//  url: 'https://gateway.watsonplatform.net/language-translation/api',
+  url: 'https://gateway.watsonplatform.net/language-translator/api',
+  username: 'a73de7b5-322d-4717-b547-4ab6ebd7fc2d',
+  password: 'omirUBxWs4Jn',
   version: 'v2'
 }, bluemix.getServiceCreds('language-translation')); // VCAP_SERVICES
 
@@ -99,8 +100,8 @@ app.post('/api/translate', function(req, res, next) {
 var tts_credentials = extend({
   url: 'https://stream.watsonplatform.net/text-to-speech/api',
   version: 'v1',
-  username: 'user name to access TTS service',
-  password: 'password to access TTS service',
+  username: 'b5af9df1-8221-4736-9721-894c3759ee9d',
+  password: '45dWCmow2GCK'
 }, bluemix.getServiceCreds('text_to_speech'));
 
 // Create the service wrappers

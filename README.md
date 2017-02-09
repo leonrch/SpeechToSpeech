@@ -61,7 +61,7 @@ applications:
   ```sh
   $ cf create-service speech_to_text standard speech-to-text-service-standard
   $ cf create-service text_to_speech standard text-to-speech-service
-  $ cf create-service language_translation standard language-translator-service
+  $ cf create-service language_translator standard language-translator-service
   ```
 
 8. Push it live!

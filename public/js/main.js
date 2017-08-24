@@ -302,14 +302,15 @@ module.exports={
       //   "language": "es-ES", 
       //   "description": "Spanish narrowband model (8KHz)"
       //}, 
-      //{
-      //   "url": "https://stream.watsonplatform.net/speech-to-text/api/v1/models/ja-JP_BroadbandModel", 
-      //   "rate": 16000, 
-      //   "name": "ja-JP_BroadbandModel", 
-      //   "language": "ja-JP", 
-      //   "description": "Japanese broadband model (16KHz)"
-      //}, 
-      //{
+      // activated Japanese model by Taiji
+      {
+        "url": "https://stream.watsonplatform.net/speech-to-text/api/v1/models/ja-JP_BroadbandModel",
+        "rate": 16000,
+        "name": "ja-JP_BroadbandModel",
+        "language": "ja-JP",
+        "description": "Japanese"
+     },
+     //{
       //   "url": "https://stream.watsonplatform.net/speech-to-text/api/v1/models/ja-JP_NarrowbandModel", 
       //   "rate": 8000, 
       //   "name": "ja-JP_NarrowbandModel", 
@@ -934,6 +935,8 @@ function getVoice() {
 		voice = 'es-US_SofiaVoice';   // TODO: try 'es-ES_EnriqueVoice' or 'es-ES_LauraVoice'
 	else if(mt_target == 'pt')
 		voice = 'pt-BR_IsabelaVoice';
+	else if(mt_target == 'ja')      // activated Japanese model by Taiji
+		voice = 'ja-JP_EmiVoice';
 	return voice;
 }
 
@@ -956,7 +959,9 @@ function getTargetLanguageCode() {
 	    mt_target = 'es';
 	else if( lang == 'Portuguese' )
 	    mt_target = 'pt';
-	return mt_target;
+	else if( lang == 'Japanese' )    // activated Japanese model by Taiji
+    mt_target = 'ja';
+return mt_target;
 }
 
 function translate(textContent) {
@@ -971,8 +976,17 @@ function translate(textContent) {
 	// call language translation service if mt_source != mt_target, otherwise jump to TTS
 	if(mt_source != mt_target) {
 		// var mid = mt_source + "-" + mt_target; // default domain is 'news'
-	    var mid = mt_source + "-" + mt_target + "-conversational";
+	  //var mid = mt_source + "-" + mt_target + "-conversational";
 		
+    // activated Japanese model by Taiji
+    // available to use only "news" domain for Japanese language
+    // not need suffix for news domain, others need it
+		if(mt_source == "ja" || mt_target == "ja"){
+      var mid = mt_source + "-" + mt_target;
+    }else{
+      var mid = mt_source + "-" + mt_target + "-conversational";
+    }
+
 		var callData = {
 			model_id: mid,
 			text: textContent
@@ -1644,7 +1658,8 @@ exports.initSelectModel = function(ctx) {
 		list.append("<li role='presentation'><a role='menuitem' tabindex='0'>French</a></li>");
 		list.append("<li role='presentation'><a role='menuitem' tabindex='1'>Portuguese</a></li>");
 		list.append("<li role='presentation'><a role='menuitem' tabindex='2'>Spanish</a></li>");
-	}
+    list.append("<li role='presentation'><a role='menuitem' tabindex='3'>Japanese</a></li>");    // activated Japanese model by Taiji
+  }
 	else if(currentModel == 'ar-AR_BroadbandModel') { 
 		list.append("<li role='presentation'><a role='menuitem' tabindex='0'>English</a></li>");
 	}
@@ -1654,7 +1669,10 @@ exports.initSelectModel = function(ctx) {
 	else if(currentModel == 'pt-BR_BroadbandModel') { 
 		list.append("<li role='presentation'><a role='menuitem' tabindex='0'>English</a></li>");
 	}
-	
+  else if(currentModel == 'ja-JP_BroadbandModel') {
+		list.append("<li role='presentation'><a role='menuitem' tabindex='0'>English</a></li>");    // activated Japanese model by Taiji
+	}
+
   }
   
   $("#dropdownMenuList").click(function(evt) {
@@ -1672,7 +1690,8 @@ exports.initSelectModel = function(ctx) {
 	// HACK: just for now because these 3 source languages have only 1 target language, which is English
 	if( newModel == "ar-AR_BroadbandModel" ||
 		newModel == "pt-BR_BroadbandModel" ||
-		newModel == "es-ES_BroadbandModel") {
+  newModel == "ja-JP_BroadbandModel" ||    // activated Japanese model by Taiji
+  newModel == "es-ES_BroadbandModel") {
 		$('#dropdownMenuTargetLanguageDefault').text("English");
 	}
 
@@ -1690,8 +1709,8 @@ exports.initSelectModel = function(ctx) {
   });
 
   function isSelectedlanguageValid(lang) {
-	if(lang == "English" || lang == "French" || lang == "Spanish" || lang == "Portuguese")
-		return true;
+    if(lang == "English" || lang == "French" || lang == "Spanish" || lang == "Portuguese" || lang == "Japanese")    // activated Japanese model by Taiji
+      return true;
 	return false;
   }
   

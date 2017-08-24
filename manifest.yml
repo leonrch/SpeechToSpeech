@@ -4,7 +4,7 @@ declared-services:
     label: speech_to_text
     plan: standard
   language-translation-service:
-    label: language_translation
+    label: language_translator
     plan: standard
   text-to-speech-service:
     label: text_to_speech

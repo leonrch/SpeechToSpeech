@@ -71,7 +71,7 @@ app.get('/token', function(req, res) {
 app.use(bodyParser.urlencoded({ extended: false }));
 
 var mt_credentials = extend({
-  url: 'https://gateway.watsonplatform.net/language-translation/api',
+  url: 'https://gateway.watsonplatform.net/language-translator/api',
   username: 'user name to access MT service',
   password: 'password to access MT service',
   version: 'v2'

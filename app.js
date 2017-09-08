@@ -41,7 +41,13 @@ if (!process.env.VCAP_SERVICES) {
 // and a user variable named VCAP_SERVICES
 // When running locally we will read config from 'vcap-local.json'
 var vcapServices = process.env.VCAP_SERVICES;
-if (!vcapServices) vcapServices = {};
+if (!vcapServices) {
+  console.log ("No VCAP_SERVICES variable so create empty one")
+  vcapServices = {};
+} else {
+  vcapServices = JSON.parse(vcapServices);
+  console.log("Data from process.env.VCAP_SERVICES"+JSON.stringify(vcapServices));
+}
 var workspace_id = process.env.CONV_WORKSPACE_ID;
 if (fs.existsSync("vcap-local.json")) {
   //When running locally, the VCAP_SERVICES will not be set so read from vcap-local.json
@@ -49,7 +55,7 @@ if (fs.existsSync("vcap-local.json")) {
   var jsonData = fs.readFileSync("vcap-local.json", "utf-8");
   // console.log ("vcap-local.json contents\n"+jsonData);
   var localJSON = JSON.parse(jsonData);
-  // console.log ("Parsed local data\n"+JSON.stringify(localJSON));
+  console.log ("Parsed local data\n"+JSON.stringify(localJSON));
   vcapServices = extend(vcapServices,localJSON.VCAP_SERVICES);
   workspace_id = localJSON.CONV_WORKSPACE_ID
 }
@@ -59,7 +65,6 @@ if (!workspace_id)
   throw new Error("No workspace id specified");
 else console.log ("Using workspace_id="+workspace_id);
 console.log ("Final service data "+JSON.stringify(vcapServices));
-
 
 // -------------------------------- speech_to_text ---------------------------------
 var stt_credentials = {

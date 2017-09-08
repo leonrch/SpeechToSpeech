@@ -1,3 +1,33 @@
+
+// a global context variable so we remember it between calls
+var context = {};
+
+function conv_init () {
+  console.log("Initialising conversation");
+  // Build request payload
+  var payloadToWatson = {};
+  payloadToWatson.input = { text: " " };
+  payloadToWatson.context = context;
+  console.log("meaasge payload: "+JSON.stringify(payloadToWatson));
+
+  // Built http request
+  var http = new XMLHttpRequest();
+  http.open('POST', '/message', true);
+  http.setRequestHeader('Content-type', 'application/json');
+  http.onreadystatechange = function() {
+    if (http.readyState === 4 && http.status === 200 && http.responseText) {
+      console.log ('response='+http.responseText);
+      var data =  JSON.parse(http.responseText);
+      context = data.context; // store for future calls
+      $('#response textarea').val(data.output.text);
+    }
+  };
+
+  // Send request
+  var params = JSON.stringify(payloadToWatson);
+  http.send(params);
+}
+
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 /**
  * Copyright 2015 IBM Corp. All Rights Reserved.
@@ -547,6 +577,9 @@ $(document).ready(function() {
 
   });
 
+  console.log ("Initializing the conversation service");
+  conv_init();
+
 });
 
 },{"./Microphone":1,"./data/models.json":2,"./utils":7,"./views":13}],6:[function(require,module,exports){
@@ -969,26 +1002,14 @@ function getTargetLanguageCode() {
 	return mt_target;
 }
 
-// a global context variable so we remember it between calls
-var context = null;
 
-function converse (textContent, extraMessage) {
-  console.log ("Sending text to conversation: "+textContent);
+function converse (textContent) {
+  console.log("Sending text to conversation: \'"+textContent+"\'");
   // Build request payload
   var payloadToWatson = {};
-  if (textContent) {
-    payloadToWatson.input = {
-      text: textContent
-    };
-  }
-  if (!context) {
-    // if the service is not initialized
-    // send a blank message
-    context = {};
-    converse ('', textContent);
-    return;
-  }
+  payloadToWatson.input = { text: textContent };
   payloadToWatson.context = context;
+  console.log("meaasge payload: "+JSON.stringify(payloadToWatson));
 
   // Built http request
   var http = new XMLHttpRequest();
@@ -1001,10 +1022,6 @@ function converse (textContent, extraMessage) {
       context = data.context; // store for future calls
       $('#response textarea').val(data.output.text);
       TTS(data.output.text);
-      // if we have a second message to send do so now
-      if (extraMessage) {
-        converse (extraMessage, null);
-      }
     }
   };
 
@@ -1013,13 +1030,14 @@ function converse (textContent, extraMessage) {
   http.send(params);
 }
 
+
 var ttsAudio = $('.audio-tts').get(0);
 
 $('#playTTS').click(function() {
   var textContent = $('#resultsText').val();
-  $('#resultsText').val() += " (confidenxw level 50%)";
+  $('#resultsText').val = textArea + " (confidence level 50%)";
   $('#response textarea').val('');
-  converse(textContent, null);
+  converse(textContent);
 });
 
 $('#stopTTS').click(function() {
@@ -1116,7 +1134,7 @@ exports.showResult = function(msg, baseString, callback) {
       console.log('---> confidence='+ (100*msg.results[0].alternatives[0].confidence) + '%');
   	  var res = text.match("([n]{2,} )");
   	  if(res == null) {
-  		    converse(text, null);
+  		    converse(text);
   	  } else {
   		    console.log('---> conversation step is skipped for text=' + text);
   	  }

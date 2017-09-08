@@ -260,41 +260,49 @@ module.exports = Microphone;
 },{"./utils":7}],2:[function(require,module,exports){
 module.exports={
    "models": [
-      {
-         "url": "https://stream.watsonplatform.net/speech-to-text/api/v1/models/ar-AR_BroadbandModel",
-         "rate": 16000,
-         "name": "ar-AR_BroadbandModel",
-         "language": "ar-AR",
-         "description": "Arabic"
-      },
-	  {
-         "url": "https://stream.watsonplatform.net/speech-to-text/api/v1/models/pt-BR_BroadbandModel",
-         "rate": 16000,
-         "name": "pt-BR_BroadbandModel",
-         "language": "pt-BR",
-         "description": "Brazilian Portuguese"
-      },
-      {
-         "url": "https://stream.watsonplatform.net/speech-to-text/api/v1/models/en-US_BroadbandModel",
-         "rate": 16000,
-         "name": "en-US_BroadbandModel",
-         "language": "en-US",
-         "description": "English" // "description": "US English broadband model (16KHz)"
-      },
-      //{
+    //   {
+    //      "url": "https://stream.watsonplatform.net/speech-to-text/api/v1/models/ar-AR_BroadbandModel",
+    //      "rate": 16000,
+    //      "name": "ar-AR_BroadbandModel",
+    //      "language": "ar-AR",
+    //      "description": "Arabic"
+    //   },
+	  // {
+    //      "url": "https://stream.watsonplatform.net/speech-to-text/api/v1/models/pt-BR_BroadbandModel",
+    //      "rate": 16000,
+    //      "name": "pt-BR_BroadbandModel",
+    //      "language": "pt-BR",
+    //      "description": "Brazilian Portuguese"
+    //   },
+    {
+       "url": "https://stream.watsonplatform.net/speech-to-text/api/v1/models/en-US_BroadbandModel",
+       "rate": 16000,
+       "name": "en-GB_BroadbandModel",
+       "language": "en-GB",
+       "description": "English" // "description": "UK English broadband model (16KHz)"
+    }
+    // US English
+    // {
+    //    "url": "https://stream.watsonplatform.net/speech-to-text/api/v1/models/en-US_BroadbandModel",
+    //    "rate": 16000,
+    //    "name": "en-US_BroadbandModel",
+    //    "language": "en-US",
+    //    "description": "English" // "description": "US English broadband model (16KHz)"
+    // }
+      // {
       //   "url": "https://stream.watsonplatform.net/speech-to-text/api/v1/models/en-US_NarrowbandModel",
       //   "rate": 8000,
       //   "name": "en-US_NarrowbandModel",
       //   "language": "en-US",
       //   "description": "US English narrowband model (8KHz)"
-      //},
-      {
-         "url": "https://stream.watsonplatform.net/speech-to-text/api/v1/models/es-ES_BroadbandModel",
-         "rate": 16000,
-         "name": "es-ES_BroadbandModel",
-         "language": "es-ES",
-         "description": "Spanish" // "description": "Spanish broadband model (16KHz)"
-      },
+      // },
+      // {
+      //    "url": "https://stream.watsonplatform.net/speech-to-text/api/v1/models/es-ES_BroadbandModel",
+      //    "rate": 16000,
+      //    "name": "es-ES_BroadbandModel",
+      //    "language": "es-ES",
+      //    "description": "Spanish" // "description": "Spanish broadband model (16KHz)"
+      // },
       //{
       //   "url": "https://stream.watsonplatform.net/speech-to-text/api/v1/models/es-ES_NarrowbandModel",
       //   "rate": 8000,
@@ -327,6 +335,8 @@ var hideError = require('./views/showerror').hideError;
 var initSocket = require('./socket').initSocket;
 
 exports.handleFileUpload = function(token, model, file, contentType, callback, onend) {
+
+    console.log ('Loading file '+file);
 
     // Set currentlyDisplaying to prevent other sockets from opening
     localStorage.setItem('currentlyDisplaying', true);
@@ -1007,6 +1017,7 @@ var ttsAudio = $('.audio-tts').get(0);
 
 $('#playTTS').click(function() {
   var textContent = $('#resultsText').val();
+  $('#resultsText').val() += " (confidenxw level 50%)";
   $('#response textarea').val('');
   converse(textContent, null);
 });
@@ -1102,6 +1113,7 @@ exports.showResult = function(msg, baseString, callback) {
   	  // HACK to ignore nn, nnn, nnnn sequences !!!
       // ToDo figure out is we should skip this test and always send
   	  console.log('---> recognised=' + text);
+      console.log('---> confidence='+ (100*msg.results[0].alternatives[0].confidence) + '%');
   	  var res = text.match("([n]{2,} )");
   	  if(res == null) {
   		    converse(text, null);

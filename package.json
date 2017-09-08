@@ -4,7 +4,6 @@
   "description": "A sample browser application for Bluemix that use the speech-to-text, conversation, and text-to-speech services",
   "dependencies": {
     "body-parser": "^1.13.2",
-    "dotenv": "^2.0.0",
     "connect": "~3.3.5",
     "errorhandler": "~1.2.4",
     "express": "~4.10.8",

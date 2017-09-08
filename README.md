@@ -2,7 +2,7 @@
 # Speech to Speech Browser Application
 
   The application uses IBM's speech recognition, machine translation, and voice synthesis capabilities to instantly translate speech to another language and read the translation aloud.
-  
+
 Node.js is used to provide the browser client's authentication token.
 
 Give it a try! Click the button below to fork into IBM DevOps Services and deploy your own copy of this application on Bluemix.
@@ -21,15 +21,15 @@ Give it a try! Click the button below to fork into IBM DevOps Services and deplo
   ```none
 ---
 declared-services:
-  speech-to-text-service-standard:
+  speech-to-text-service:
     label: speech_to_text
     plan: standard
-  language-translation-service:
-    label: language_translation
-    plan: standard
+  conversation-service:
+    label: conversation
+    plan: free
   text-to-speech-service:
     label: text_to_speech
-    plan: standard	
+    plan: standard
 applications:
 - name: <application name>
   command: node app.js
@@ -37,8 +37,8 @@ applications:
   path: .
   memory: 256m
   services:
-  - speech-to-text-service-standard
-  - language-translation-service
+  - speech-to-text-service
+  - conversation-service
   - text-to-speech-service
   ```
   The name you use will determinate your application url initially, e.g. `<application-name>.mybluemix.net`.
@@ -59,12 +59,14 @@ applications:
 
 7. Create the following three services in Bluemix.
   ```sh
-  $ cf create-service speech_to_text standard speech-to-text-service-standard
+  $ cf create-service speech_to_text standard speech-to-text-service
   $ cf create-service text_to_speech standard text-to-speech-service
-  $ cf create-service language_translation standard language-translation-service
+  $ cf create-service conversation free conversation-service
   ```
 
-8. Push it live!
+8. Import the conversation from JSON - TBD copy instructions from another sample
+
+9. Push it live!
   ```sh
   $ cf push
   ```

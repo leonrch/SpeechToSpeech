@@ -1532,7 +1532,7 @@ var playSample = (function() {
 exports.initPlaySample = function(ctx) {
 
   (function() {
-    var fileName = 'audio/' + LOOKUP_TABLE[ctx.currentModel][0];
+    var fileName = 'audio/turn-on-the-wipers.wav';
     var el = $('.play-sample-1');
     el.off('click');
     var iconName = 'play';
@@ -1545,8 +1545,34 @@ exports.initPlaySample = function(ctx) {
   })(ctx, LOOKUP_TABLE);
 
   (function() {
-    var fileName = 'audio/' + LOOKUP_TABLE[ctx.currentModel][1];
+    var fileName = 'audio/play-music.wav';
     var el = $('.play-sample-2');
+    el.off('click');
+    var iconName = 'play';
+    var imageTag = el.find('img');
+    el.click( function(evt) {
+      playSample(ctx.token, imageTag, iconName, fileName, function(result) {
+        console.log('Play sample result', result);
+      });
+    });
+  })(ctx, LOOKUP_TABLE);
+
+  (function() {
+    var fileName = 'audio/jazz.wav';
+    var el = $('.play-sample-3');
+    el.off('click');
+    var iconName = 'play';
+    var imageTag = el.find('img');
+    el.click( function(evt) {
+      playSample(ctx.token, imageTag, iconName, fileName, function(result) {
+        console.log('Play sample result', result);
+      });
+    });
+  })(ctx, LOOKUP_TABLE);
+
+  (function() {
+    var fileName = 'audio/rock.wav';
+    var el = $('.play-sample-4');
     el.off('click');
     var iconName = 'play';
     var imageTag = el.find('img');

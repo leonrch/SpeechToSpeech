@@ -121,6 +121,7 @@ app.post('/message', function(req, res) {
     context: req.body.context || {},
     input: req.body.input || {"text": ""}
   };
+  payload = extend (payload, conv_credentials);
   console.log ('payload: '+JSON.stringify(payload));
 
   // Send the input to the conversation service

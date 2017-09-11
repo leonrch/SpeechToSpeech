@@ -62,7 +62,7 @@ applications:
   $ cf create-service conversation free conversation-service
   ```
 
-8. Import the conversation from JSON as described in the [Workspace section of this document](Workspace)
+8. Import the conversation from JSON as described in the <a href="#workspace"> Workspace section of this document</a>
 
 9. Push it live!
   ```sh
@@ -89,7 +89,7 @@ See the full [Getting Started][getting_started] documentation for more details, 
        {
         "credentials": {
          "cred_url": "https://perfbroker.au-syd.bluemix.net",
-         "token": "NGa4SdZyjRoQTyec7pj556Wy0EG3eTYju4dIoMtCOk3H7Fu3WNwojuE2e7A2Ikr4jfuG1b8tC/1hA+V05HRaVkT8rpyyiZm448WfvArq2Q8="
+         "token": " ... "
         },
         "label": "AvailabilityMonitoring",
         "name": "availability-monitoring-auto",
@@ -108,9 +108,9 @@ See the full [Getting Started][getting_started] documentation for more details, 
       "conversation": [
        {
         "credentials": {
-         "password": "i4L4zzZjqTyg",
+         "password": "conv_password",
          "url": "https://gateway.watsonplatform.net/conversation/api",
-         "username": "3a10f334-2963-42dd-a6bd-4b5da7d8573f"
+         "username": "conv_username"
         },
         "label": "conversation",
         "name": "conversation-service",
@@ -129,9 +129,9 @@ See the full [Getting Started][getting_started] documentation for more details, 
       "speech_to_text": [
        {
         "credentials": {
-         "password": "5rVjefqG8HZ7",
+         "password": "stt_password",
          "url": "https://stream.watsonplatform.net/speech-to-text/api",
-         "username": "8ddd3fe6-746a-45fd-8fb2-a256ca165e76"
+         "username": "stt_username"
         },
         "label": "speech_to_text",
         "name": "speech-to-text-service",
@@ -149,9 +149,9 @@ See the full [Getting Started][getting_started] documentation for more details, 
       "text_to_speech": [
        {
         "credentials": {
-         "password": "xPmMGOYh6kWn",
+         "password": "<tts_password>",
          "url": "https://stream.watsonplatform.net/text-to-speech/api",
-         "username": "15af92b9-fbd4-4cbc-86da-9c839d022d81"
+         "username": "<tts_user>"
         },
         "label": "text_to_speech",
         "name": "text-to-speech-service",
@@ -171,10 +171,10 @@ See the full [Getting Started][getting_started] documentation for more details, 
 
     {
      "VCAP_APPLICATION": {
-      "application_id": "05effa72-be64-4092-bf1f-4650c04f170b",
-      "application_name": "speak-to-watson-app",
+      "application_id": "<application_id>",
+      "application_name": "<application_name>",
       "application_uris": [
-       "speak-to-watson-app.au-syd.mybluemix.net"
+       "<application_name>-app.au-syd.mybluemix.net"
       ],
       "application_version": "6b922803-d7d3-42b4-962f-ef048e3ed9b1",
       "cf_api": "https://api.au-syd.bluemix.net",
@@ -183,19 +183,19 @@ See the full [Getting Started][getting_started] documentation for more details, 
        "fds": 16384,
        "mem": 256
       },
-      "name": "speak-to-watson-app",
-      "space_id": "2a12200a-4455-413d-8322-f82fab04307d",
+      "name": "<application_name>",
+      "space_id": "<space_id>",
       "space_name": "Australia",
       "uris": [
-       "speak-to-watson-app.au-syd.mybluemix.net"
+       "<application_name>.au-syd.mybluemix.net"
       ],
       "users": null,
-      "version": "6b922803-d7d3-42b4-962f-ef048e3ed9b1"
+      "version": "..... "
      }
     }
 
     User-Provided:
-    CONV_WORKSPACE_ID: f567d2bf-f5f6-46bc-9fa1-396b9d03cb90
+    CONV_WORKSPACE_ID: <workspace_id>
 
     Running Environment Variable Groups:
     BLUEMIX_REGION: ibm:yp:au-syd
@@ -203,7 +203,96 @@ See the full [Getting Started][getting_started] documentation for more details, 
     Staging Environment Variable Groups:
     BLUEMIX_REGION: ibm:yp:au-syd
     ```
-    You need to copy `lt-username`, `lt-password`, `stt-username`, `stt-password`, `tts-username` and `tts-password`.
+    If you are planning to run locally, you need to copy the contents of the VCAP_SERVICES variable into a new file named vcap-local.json. You also need to add a wodkspace_id variable to this structure, using the value you copied above.
+
+    ```
+      {
+        "CONV_WORKSPACE_ID": "<workspace_id>",   
+       "VCAP_SERVICES": {
+        "AvailabilityMonitoring": [
+         {
+          "credentials": {
+           "cred_url": "https://perfbroker.au-syd.bluemix.net",
+           "token": " ... "
+          },
+          "label": "AvailabilityMonitoring",
+          "name": "availability-monitoring-auto",
+          "plan": "Lite",
+          "provider": null,
+          "syslog_drain_url": null,
+          "tags": [
+           "ibm_created",
+           "bluemix_extensions",
+           "dev_ops",
+           "lite"
+          ],
+          "volume_mounts": []
+         }
+        ],
+        "conversation": [
+         {
+          "credentials": {
+           "password": "conv_password",
+           "url": "https://gateway.watsonplatform.net/conversation/api",
+           "username": "conv_username"
+          },
+          "label": "conversation",
+          "name": "conversation-service",
+          "plan": "free",
+          "provider": null,
+          "syslog_drain_url": null,
+          "tags": [
+           "watson",
+           "ibm_created",
+           "ibm_dedicated_public",
+           "lite"
+          ],
+          "volume_mounts": []
+         }
+        ],
+        "speech_to_text": [
+         {
+          "credentials": {
+           "password": "stt_password",
+           "url": "https://stream.watsonplatform.net/speech-to-text/api",
+           "username": "stt_username"
+          },
+          "label": "speech_to_text",
+          "name": "speech-to-text-service",
+          "plan": "standard",
+          "provider": null,
+          "syslog_drain_url": null,
+          "tags": [
+           "watson",
+           "ibm_created",
+           "ibm_dedicated_public"
+          ],
+          "volume_mounts": []
+         }
+        ],
+        "text_to_speech": [
+         {
+          "credentials": {
+           "password": "<tts_password>",
+           "url": "https://stream.watsonplatform.net/text-to-speech/api",
+           "username": "<tts_user>"
+          },
+          "label": "text_to_speech",
+          "name": "text-to-speech-service",
+          "plan": "standard",
+          "provider": null,
+          "syslog_drain_url": null,
+          "tags": [
+           "watson",
+           "ibm_created",
+           "ibm_dedicated_public"
+          ],
+          "volume_mounts": []
+         }
+        ]
+       }
+      }
+      ```
 
 2. Install [Node.js](http://nodejs.org/)
 

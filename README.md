@@ -330,7 +330,7 @@ Give it a try! Click the button below to fork into IBM DevOps Services and deplo
 
 To use the app you're creating, you need to add a workspace to your Conversation service. A workspace is a container for all the artifacts that define the behavior of your service (ie: intents, entities and chat flows). For this sample app, you can either use a workspace you already have or use the car related workspace from the [Simple Conversation](https://github.com/watson-developer-cloud/conversation-simple) sample.
 
-For more information on workspaces, see the full  [Conversation service  documentation](https://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/doc/conversation/overview.shtml).
+For more information on workspaces, see the full  [Conversation service  documentation](https://console.bluemix.net/docs/services/conversation/getting-started.html#gettingstarted).
 
 1. Navigate to the Bluemix dashboard, select the Conversation service that you created.
 

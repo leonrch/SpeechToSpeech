@@ -288,20 +288,6 @@ module.exports = Microphone;
 },{"./utils":7}],2:[function(require,module,exports){
 module.exports={
    "models": [
-    //   {
-    //      "url": "https://stream.watsonplatform.net/speech-to-text/api/v1/models/ar-AR_BroadbandModel",
-    //      "rate": 16000,
-    //      "name": "ar-AR_BroadbandModel",
-    //      "language": "ar-AR",
-    //      "description": "Arabic"
-    //   },
-	  // {
-    //      "url": "https://stream.watsonplatform.net/speech-to-text/api/v1/models/pt-BR_BroadbandModel",
-    //      "rate": 16000,
-    //      "name": "pt-BR_BroadbandModel",
-    //      "language": "pt-BR",
-    //      "description": "Brazilian Portuguese"
-    //   },
     {
        "url": "https://stream.watsonplatform.net/speech-to-text/api/v1/models/en-US_BroadbandModel",
        "rate": 16000,
@@ -309,49 +295,6 @@ module.exports={
        "language": "en-GB",
        "description": "English" // "description": "UK English broadband model (16KHz)"
     }
-    // US English
-    // {
-    //    "url": "https://stream.watsonplatform.net/speech-to-text/api/v1/models/en-US_BroadbandModel",
-    //    "rate": 16000,
-    //    "name": "en-US_BroadbandModel",
-    //    "language": "en-US",
-    //    "description": "English" // "description": "US English broadband model (16KHz)"
-    // }
-      // {
-      //   "url": "https://stream.watsonplatform.net/speech-to-text/api/v1/models/en-US_NarrowbandModel",
-      //   "rate": 8000,
-      //   "name": "en-US_NarrowbandModel",
-      //   "language": "en-US",
-      //   "description": "US English narrowband model (8KHz)"
-      // },
-      // {
-      //    "url": "https://stream.watsonplatform.net/speech-to-text/api/v1/models/es-ES_BroadbandModel",
-      //    "rate": 16000,
-      //    "name": "es-ES_BroadbandModel",
-      //    "language": "es-ES",
-      //    "description": "Spanish" // "description": "Spanish broadband model (16KHz)"
-      // },
-      //{
-      //   "url": "https://stream.watsonplatform.net/speech-to-text/api/v1/models/es-ES_NarrowbandModel",
-      //   "rate": 8000,
-      //   "name": "es-ES_NarrowbandModel",
-      //   "language": "es-ES",
-      //   "description": "Spanish narrowband model (8KHz)"
-      //},
-      //{
-      //   "url": "https://stream.watsonplatform.net/speech-to-text/api/v1/models/ja-JP_BroadbandModel",
-      //   "rate": 16000,
-      //   "name": "ja-JP_BroadbandModel",
-      //   "language": "ja-JP",
-      //   "description": "Japanese broadband model (16KHz)"
-      //},
-      //{
-      //   "url": "https://stream.watsonplatform.net/speech-to-text/api/v1/models/ja-JP_NarrowbandModel",
-      //   "rate": 8000,
-      //   "name": "ja-JP_NarrowbandModel",
-      //   "language": "ja-JP",
-      //   "description": "Japanese narrowband model (8KHz)"
-      //}
    ]
 }
 
@@ -548,7 +491,7 @@ $(document).ready(function() {
     }
 
     var viewContext = {
-      currentModel: 'en-US_BroadbandModel',
+      currentModel: 'en-GB_BroadbandModel',
       models: models,
       token: token,
       bufferSize: BUFFERSIZE
@@ -560,7 +503,7 @@ $(document).ready(function() {
     localStorage.setItem('models', JSON.stringify(models));
 
     // Set default current model
-    localStorage.setItem('currentModel', 'en-US_BroadbandModel');
+    localStorage.setItem('currentModel', 'en-GB_BroadbandModel');
     localStorage.setItem('sessionPermissions', 'true');
 
 
@@ -1473,7 +1416,7 @@ var playSample = (function() {
     xhr.responseType = 'blob';
     xhr.onload = function(e) {
       var blob = xhr.response;
-      var currentModel = localStorage.getItem('currentModel') || 'en-US_BroadbandModel';
+      var currentModel = localStorage.getItem('currentModel') || 'en-GB_BroadbandModel';
       var reader = new FileReader();
       var blobToText = new Blob([blob]).slice(0, 4);
       reader.readAsText(blobToText);
@@ -1657,7 +1600,7 @@ var initPlaySample = require('./playsample').initPlaySample;
 exports.initSelectModel = function(ctx) {
 
   function isDefault(model) {
-    return model === 'en-US_BroadbandModel';
+    return model === 'en-GB_BroadbandModel';
   }
 
   ctx.models.forEach(function(model) {
@@ -1674,7 +1617,7 @@ exports.initSelectModel = function(ctx) {
   });
 
   function onChooseTargetLanguageClick() {
-  	var currentModel = localStorage.getItem('currentModel') || 'en-US_BroadbandModel';
+  	var currentModel = localStorage.getItem('currentModel') || 'en-GB_BroadbandModel';
 	var list = $("#dropdownMenuTargetLanguage");
 	list.empty();
 	if(currentModel == 'en-US_BroadbandModel') {

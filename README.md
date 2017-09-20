@@ -366,7 +366,7 @@ If you are not comfortable manipulating environment variables using the _cf_ com
 
 ## Learn more
 
-See the full [Getting Started](http://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/doc/getting_started/) documentation for more information about IBM Watson services.
+See the full [Getting Started](https://console.bluemix.net/docs/services/watson/index.html#about) documentation for more information about IBM Watson services.
 
 ## Troubleshooting
 

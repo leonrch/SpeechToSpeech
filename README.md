@@ -336,7 +336,7 @@ For more information on workspaces, see the full  [Conversation service  documen
 
 2. Go to the **Manage** menu item and select **Launch Tool**. This opens a new tab in your browser, where you are prompted to login if you have not done so before. Use your Bluemix credentials.
 
-3. If you are deploying through Bluemix, download the [exported JSON file](https://raw.githubusercontent.com/bodonova/SpeakToWatson/master/car_weather_workspace.json) that contains the Workspace contents. If deploying locally,  this was cloned and is in the root folder (car_workspace.json).
+3. If you are deploying through Bluemix, download the [exported JSON file](https://raw.githubusercontent.com/bodonova/SpeakToWatson/master/car_workspace.json) that contains the Workspace contents. If deploying locally,  this was cloned and is in the root folder (car_workspace.json).
 
 4. Select the import icon: ![](readme_images/importGA.PNG). Browse to (or drag and drop) the JSON file. Choose to import **Everything(Intents, Entities, and Dialog)**. Then select **Import** to finish importing the workspace.
 
@@ -366,7 +366,7 @@ If you are not comfortable manipulating environment variables using the _cf_ com
 
 ## Learn more
 
-See the full [Getting Started]http://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/doc/getting_started/() documentation for more information about IBM Watson services.
+See the full [Getting Started](http://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/doc/getting_started/) documentation for more information about IBM Watson services.
 
 ## Troubleshooting
 

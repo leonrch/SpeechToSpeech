@@ -5,9 +5,7 @@ var context = {};
 function conv_init () {
   console.log("Initialising conversation");
   // Build request payload
-  var payloadToWatson = {};
-  payloadToWatson.input = { text: " " };
-  payloadToWatson.context = context;
+  var payloadToWatson = {"text": " " , "context": {} };
   console.log("meaasge payload: "+JSON.stringify(payloadToWatson));
 
   // Built http request
@@ -627,7 +625,6 @@ var initSocket = exports.initSocket = function(options, onopen, onlistening, onm
   var sessionPermissionsQueryParam = sessionPermissions ? '0' : '1';
   var url = options.serviceURI || 'wss://stream.watsonplatform.net/speech-to-text/api/v1/recognize?watson-token='
     + token
-    + '&X-WDC-PL-OPT-OUT=' + sessionPermissionsQueryParam
     + '&model=' + model;
   console.log('URL model', model);
   try {
@@ -636,6 +633,7 @@ var initSocket = exports.initSocket = function(options, onopen, onlistening, onm
     console.error('WS connection error: ', err);
   }
   socket.onopen = function(evt) {
+    console.log ('Socket opened to speech-to-text service');
     listening = false;
     $.subscribe('hardsocketstop', function(data) {
       console.log('MICROPHONE: close.');
@@ -1035,7 +1033,7 @@ var ttsAudio = $('.audio-tts').get(0);
 
 $('#playTTS').click(function() {
   var textContent = $('#resultsText').val();
-  $('#resultsText').val = textArea + " (confidence level 50%)";
+  // ToDo indicate the confidence of the transcriotion e.g.
   $('#response textarea').val('');
   converse(textContent);
 });
@@ -1082,8 +1080,7 @@ function playTTSifInputSpeechIsOff() {
 function synthesizeRequest(text, v) {
 	var downloadURL = '/synthesize' +
 	  '?voice=' + v +
-	  '&text=' + encodeURIComponent(text) +
-	  '&X-WDC-PL-OPT-OUT=0';
+	  '&text=' + encodeURIComponent(text);
 
 	ttsChunks.push(downloadURL);
 

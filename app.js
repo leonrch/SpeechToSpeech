@@ -82,7 +82,13 @@ app.get('/token', function(req, res) {
     if (err) {
       console.log('getToken error:', err);
       res.status(err.code);
+      var err_text = 'Failed to connect to IBM Watson Speech-to_Text service - check your internet connection.\n'+err;
+      return res.status(500).json({
+        'output': {
+          'text': err_text
+          }}); // the converstion service returned an error
     }
+    console.log ('getToken returns: '+JSON.stringify(token));
     res.send(token);
   });
 });
@@ -126,10 +132,15 @@ app.post('/message', function(req, res) {
 
   // Send the input to the conversation service
   conversation.message(payload, function(err, data) {
-    console.log ('Conversation service response: '+JSON.stringify(data));
     if (err) {
-      return res.status(err.code || 500).json(err); // the converstion service returned an error
+      console.log ('Sending a response for error code: '+err.code+' detail: '+err);
+      var err_text = 'Failed to connect to IBM Watson Conversation service - check your internet connection.\n'+err;
+      return res.status(500).json({
+        'output': {
+          'text': err_text
+          }}); // the converstion service returned an error
     }
+    console.log ('Conversation service response: '+JSON.stringify(data));
     return res.json(data);
   });
 });

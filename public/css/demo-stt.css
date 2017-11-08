@@ -28,7 +28,7 @@
 }
 
 .main-header h1 {
-  color: #121212;
+  color: #121212; /* bnlack */
 }
 
 .navbar-text {
@@ -91,9 +91,9 @@
   }
 }
 
-button#playTTS, 
+button#playTTS,
 button#stopTTS {
-  background-color: #2f76bb;
+  background-color: #2f76bb; /* steel blue  */)
   border: 0;
   color: white;
 }
@@ -124,7 +124,7 @@ input[type="radio"], input[type="checkbox"] {
   padding-left: 1em;
   padding-right: 1em;
   display: none;
-  background-color: #d74108;
+  background-color: #d74108; /* dark red */
   color: white;
 }
 
@@ -137,8 +137,8 @@ input[type="radio"], input[type="checkbox"] {
   padding-left: 1em;
   padding-right: 1em;
   display: none;
-  border-bottom: 2px solid #ececec;
-  background-color: #d74108;
+  border-bottom: 2px solid #ececec; /* light grey/white */
+  background-color: #d74108; /* dark red */
   color: black;
 }
 .notification-row a {
@@ -150,8 +150,8 @@ input[type="radio"], input[type="checkbox"] {
   visibility: hidden;
 }
 
-progress::-moz-progress-bar { background: #5596E6; }
-progress::-webkit-progress-bar { background: #5596E6; }
+progress::-moz-progress-bar { background: #5596E6; } /* light blue */
+progress::-webkit-progress-bar { background: #5596E6; } /* light blue */
 
 
 #metadataTable th {
@@ -207,7 +207,7 @@ ol > li:before {
     margin-right: 8px;
     padding: 4px;
     color: #fff;
-    background: #325c80;
+    background: #325c80; /* blue */
     border-radius: 50%;
     /* top: 1em; */
     /* font-weight:bold; */

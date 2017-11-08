@@ -1,0 +1,63 @@
+{
+    "conversation": [
+        {
+            "credentials": {
+                "url": "https://gateway.watsonplatform.net/conversation/api",
+                "username": "0e14e1d4-d1d0-44b0-8418-e8bf0666eedf",
+                "password": "DVAS0USXywmJ"
+            },
+            "syslog_drain_url": null,
+            "volume_mounts": [],
+            "label": "conversation",
+            "provider": null,
+            "plan": "free",
+            "name": "tlelab-conv-service",
+            "tags": [
+                "watson",
+                "ibm_created",
+                "ibm_dedicated_public",
+                "lite"
+            ]
+        }
+    ],
+    "speech_to_text": [
+        {
+            "credentials": {
+                "url": "https://stream.watsonplatform.net/speech-to-text/api",
+                "username": "44510924-2ed4-4911-8ab5-a14e67494df4",
+                "password": "1zEzRMsPPB8K"
+            },
+            "syslog_drain_url": null,
+            "volume_mounts": [],
+            "label": "speech_to_text",
+            "provider": null,
+            "plan": "standard",
+            "name": "au-speech-to-text",
+            "tags": [
+                "watson",
+                "ibm_created",
+                "ibm_dedicated_public"
+            ]
+        }
+    ],
+    "text_to_speech": [
+        {
+            "credentials": {
+                "url": "https://stream.watsonplatform.net/text-to-speech/api",
+                "username": "5a707b02-6ab8-4a53-aaba-41e66c0a7004",
+                "password": "FOkV0qQXNYkO"
+            },
+            "syslog_drain_url": null,
+            "volume_mounts": [],
+            "label": "text_to_speech",
+            "provider": null,
+            "plan": "standard",
+            "name": "au-text-to-speech",
+            "tags": [
+                "watson",
+                "ibm_created",
+                "ibm_dedicated_public"
+            ]
+        }
+    ]
+}

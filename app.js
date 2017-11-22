@@ -18,95 +18,147 @@
 
 var express = require('express'),
     app = express(),
-	bodyParser = require("body-parser"), //L.R.
+	  bodyParser = require("body-parser"), //L.R.
     errorhandler = require('errorhandler'),
     bluemix = require('./config/bluemix'),
     watson = require('watson-developer-cloud'),
+    Conversation = require('watson-developer-cloud/conversation/v1'),
     path = require('path'),
-    // environmental variable points to demo's json config file
+    fs = require('fs'),
     extend = require('util')._extend;
 
-// For local development, put username and password in config
-// or store in your environment
-var config = {
-  version: 'v1',
-  url: 'https://stream.watsonplatform.net/speech-to-text/api',
-  username: 'user name to access STT service',
-  password: 'password to access STT service'
-};
 
-// if bluemix credentials exists, then override local
-var credentials = extend(config, bluemix.getServiceCreds('speech_to_text'));
-var authorization = watson.authorization(credentials);
+// Serve static contend from  public directory
+app.use(express.static(path.join(__dirname , './public')));
+app.use(bodyParser.json());
 
-// redirect to https if the app is not running locally
-if (!!process.env.VCAP_SERVICES) {
-  app.enable('trust proxy');
-  app.use (function (req, res, next) {
-    if (req.secure) {
-      next();
-    } 
-    else {
-      res.redirect('https://' + req.headers.host + req.url);
-    }
-  });
+// Add error handling in dev
+if (!process.env.VCAP_SERVICES) {
+  app.use(errorhandler());
 }
 
-// Setup static public directory
-app.use(express.static(path.join(__dirname , './public')));
+// When running on Bluemix we will get config data from VCAP_SERVICES
+// and a user variable named VCAP_SERVICES
+// When running locally we will read config from 'vcap-local.json'
+var vcapServices = process.env.VCAP_SERVICES;
+if (!vcapServices) {
+  console.log ("No VCAP_SERVICES variable so create empty one")
+  vcapServices = {};
+} else {
+  vcapServices = JSON.parse(vcapServices);
+  console.log("Data from process.env.VCAP_SERVICES"+JSON.stringify(vcapServices));
+}
+var workspace_id = process.env.CONV_WORKSPACE_ID;
+if (fs.existsSync("vcap-local.json")) {
+  //When running locally, the VCAP_SERVICES will not be set so read from vcap-local.json
+  // console.log ("Original env data "+JSON.stringify(vcapServices));
+  var jsonData = fs.readFileSync("vcap-local.json", "utf-8");
+  // console.log ("vcap-local.json contents\n"+jsonData);
+  var localJSON = JSON.parse(jsonData);
+  console.log ("Parsed local data\n"+JSON.stringify(localJSON));
+  vcapServices = extend(vcapServices,localJSON.VCAP_SERVICES);
+  workspace_id = localJSON.CONV_WORKSPACE_ID
+}
+
+// Test here to check a workspace_id was specified
+if (!workspace_id)
+  throw new Error("No workspace id specified");
+else console.log ("Using workspace_id="+workspace_id);
+console.log ("Final service data "+JSON.stringify(vcapServices));
+
+// -------------------------------- speech_to_text ---------------------------------
+var stt_credentials = {
+  version: 'v1',
+  url: 'https://stream.watsonplatform.net/speech-to-text/api',
+  username: vcapServices.speech_to_text[0].credentials.username,
+  password: vcapServices.speech_to_text[0].credentials.password
+};
+var authorization = watson.authorization(stt_credentials);
 
 // Get token from Watson using your credentials
 app.get('/token', function(req, res) {
-  authorization.getToken({url: credentials.url}, function(err, token) {
+  console.log ("Getting a token with credentials "+JSON.stringify(stt_credentials));
+  authorization.getToken({url: stt_credentials.url}, function(err, token) {
     if (err) {
-      console.log('error:', err);
+      console.log('getToken error:', err);
       res.status(err.code);
+      var err_text = 'Failed to connect to IBM Watson Speech-to_Text service - check your internet connection.\n'+err;
+      return res.status(500).json({
+        'output': {
+          'text': err_text
+          }}); // the converstion service returned an error
     }
+    console.log ('getToken returns: '+JSON.stringify(token));
     res.send(token);
   });
 });
 
-// L.R.
-// ------------------------------- MT ---------------------------------
-app.use(bodyParser.urlencoded({ extended: false }));
 
-var mt_credentials = extend({
-  url: 'https://gateway.watsonplatform.net/language-translation/api',
-  username: 'user name to access MT service',
-  password: 'password to access MT service',
-  version: 'v2'
-}, bluemix.getServiceCreds('language-translation')); // VCAP_SERVICES
+// -------------------------------- Conversation ---------------------------------
 
-var language_translation = watson.language_translation(mt_credentials);
+// Create the service wrapper - use credentials from environment file is running locally or from VCAP_SERVICES on Bluemix
+var conv_credentials = extend({
+  "url": "https://gateway.watsonplatform.net/conversation/api",
+  version: 'v1',
+  username: vcapServices.conversation[0].credentials.username,
+  password: vcapServices.conversation[0].credentials.password,
+  version_date: Conversation.VERSION_DATE_2017_04_21
+}, bluemix.getServiceCreds('conversation'));
+var conversation = new Conversation(conv_credentials);
 
-app.post('/api/translate', function(req, res, next) {
-  //console.log('/v2/translate');
-  
-  var params = extend({ 'X-WDC-PL-OPT-OUT': req.header('X-WDC-PL-OPT-OUT')}, req.body);
-  //console.log(' ---> params == ' + JSON.stringify(params)); //L.R.
-  
-  language_translation.translate(params, function(err, models) {
-  if (err)
-    return next(err);
-  else
-    res.json(models);
+// Endpoint to the conversation service that will be called from the client side
+app.post('/message', function(req, res) {
+  // console.log ('Message sent to conversation service: '+JSON.stringify(req));
+  //console.log ('Message sent to conversation service: '+req.body);
+  if (!workspace_id) {
+    console.log ("we can't respond because no workspace_id has been set");
+    return res.json({
+      'output': {
+        'text': 'The app has not been configured with a <b>WORKSPACE_ID</b> environment variable. Please refer to the '
+        + '<a href="https://github.com/bodonova/SpeakToWatson">README</a> documentation on how to set this variable. <br>'
+        + 'Once a workspace has been defined the intents may be imported from '
+        + '<a href="https://github.com/bodonova/SpeakToWatson/blob/master/car_workspace.json">here</a> in order to get a working application.'
+      }
+    });
+  }
+
+  var payload = {
+    workspace_id: workspace_id,
+    context: req.body.context || {},
+    input: req.body.input || {"text": ""}
+  };
+  payload = extend (payload, conv_credentials);
+  console.log ('payload: '+JSON.stringify(payload));
+
+  // Send the input to the conversation service
+  conversation.message(payload, function(err, data) {
+    if (err) {
+      console.log ('Sending a response for error code: '+err.code+' detail: '+err);
+      var err_text = 'Failed to connect to IBM Watson Conversation service - check your internet connection.\n'+err;
+      return res.status(500).json({
+        'output': {
+          'text': err_text
+          }}); // the converstion service returned an error
+    }
+    console.log ('Conversation service response: '+JSON.stringify(data));
+    return res.json(data);
   });
 });
-// ----------------------------------------------------------------------
 
-// L.R.
+
 // -------------------------------- TTS ---------------------------------
 var tts_credentials = extend({
   url: 'https://stream.watsonplatform.net/text-to-speech/api',
   version: 'v1',
-  username: 'user name to access TTS service',
-  password: 'password to access TTS service',
+  username: vcapServices.text_to_speech[0].credentials.username,
+  password: vcapServices.text_to_speech[0].credentials.password
 }, bluemix.getServiceCreds('text_to_speech'));
 
 // Create the service wrappers
 var textToSpeech = watson.text_to_speech(tts_credentials);
 
 app.get('/synthesize', function(req, res) {
+  console.log ("Synthesizing response: "+JSON.stringify(req.query));
   var transcript = textToSpeech.synthesize(req.query);
   transcript.on('response', function(response) {
     if (req.query.download) {
@@ -121,10 +173,19 @@ app.get('/synthesize', function(req, res) {
 
 // ----------------------------------------------------------------------
 
-// Add error handling in dev
-if (!process.env.VCAP_SERVICES) {
-  app.use(errorhandler());
+// redirect to https if the app is not running locally
+if (!!process.env.VCAP_SERVICES) {
+  app.enable('trust proxy');
+  app.use (function (req, res, next) {
+    if (req.secure) {
+      next();
+    }
+    else {
+      res.redirect('https://' + req.headers.host + req.url);
+    }
+  });
 }
+
 var port = process.env.VCAP_APP_PORT || 3000;
 app.listen(port);
 console.log('listening at:', port);

@@ -1,13 +1,25 @@
 # SpeechToSpeech
 # Speech to Speech Browser Application
 
-  The application uses IBM's speech recognition, machine translation, and voice synthesis capabilities to instantly translate speech to another language and read the translation aloud.
-  
-Node.js is used to provide the browser client's authentication token.
+  The application uses IBM's speech recognition, machine translation, and voice synthesis capabilities to instantly translate speech to another language and reads the translation aloud. This is heavily based on the https://github.com/leonrch/SpeechToSpeech sample (the only significant change is the addition of support for German and the switch to using the neural network model based machine translation)
+
+  This code is hosted on two instances of GIT. One is used for public perusal of the code and one is used as part of the deployment toolchain. If you are pushing changes to this project make sure to push it to both GUT repositories. Your environment will be automatically configured to push back changes to the repository that you originally cloned, but use one of the commands below:
+
+  ```sh
+  $ git add remote github git@github.com:bodonova/SpeechToGerman.git
+  $ git push -u github
+  ```
+
+  or
+
+  ```sh
+  $ git add remote bluemix git@git.ng.bluemix.net:brian_odonovan/speech-to-speech-app.git
+  $ git push -u bluemix
+  ```
 
 Give it a try! Click the button below to fork into IBM DevOps Services and deploy your own copy of this application on Bluemix.
 
-[![Deploy to Bluemix](https://bluemix.net/deploy/button.png)](https://bluemix.net/deploy?repository=https://github.com/leonrch/SpeechToSpeech)
+[![Deploy to Bluemix](https://bluemix.net/deploy/button.png)](https://bluemix.net/deploy?repository=hhttps://github.com/bodonova/SpeechToGerman)
 
 ## Getting Started
 
@@ -29,7 +41,7 @@ declared-services:
     plan: standard
   text-to-speech-service:
     label: text_to_speech
-    plan: standard	
+    plan: standard
 applications:
 - name: <application name>
   command: node app.js
@@ -74,8 +86,11 @@ See the full [Getting Started][getting_started] documentation for more details, 
 
   The application uses [Node.js](http://nodejs.org/) and [npm](https://www.npmjs.com/) so you will have to download and install them as part of the steps below.
 
-1. Copy the credentials from your `speech-to-text-service-standard`, `language-translation-service`,
-   `text-to-speech-service` services in Bluemix to `app.js`, you can see the credentials using:
+1. When running on Bluemix, the system looks after connecting the application with the Watson services that it uses. However, when you are running locally, you need to create a `vcap-local.json` file to tell the application running locally on your laptop how to connect to the various  Watson services you need  
+
+  **Note:** While it is possible to run the application locally, this does not mean that the application can run without an internet connection. It is essential for this application to be able to connect to the Watson services running in the cloud.
+
+  If you already have deployed the application to Bluemix, the easiest way to create a `vcap-local.json` file is to simply copy the configuration variables from Bluemix using the commands below.
 
     ```sh
     $ cf env <application-name>
@@ -146,7 +161,7 @@ See the full [Getting Started][getting_started] documentation for more details, 
 	 }
 	}
     ```
-    You need to copy `lt-username`, `lt-password`, `stt-username`, `stt-password`, `tts-username` and `tts-password`.
+    You need to copy the entire content of the `VCAP_SERVICES` variable into your `vcap-local.json` file. This hass all of the cnfiguration variables needed by the application
 
 2. Install [Node.js](http://nodejs.org/)
 

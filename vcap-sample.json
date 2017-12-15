@@ -1,0 +1,29 @@
+{
+  "speech_to_text": [
+    {
+      "credentials": {
+        "url": "https://stream.watsonplatform.net/speech-to-text/api",
+        "username": "<stt_username>",
+        "password": "<stt_password>"
+      }
+    }
+  ],
+  "language_translator": [
+    {
+      "credentials": {
+        "url": "https://gateway.watsonplatform.net/language-translator/api",
+        "username": "<mt_username>",
+        "password": "<mt_password>"
+      }
+    }
+  ],
+  "text_to_speech": [
+    {
+      "credentials": {
+        "url": "https://stream.watsonplatform.net/text-to-speech/api",
+        "username": "<tts_username>",
+        "password": "<tts_password>"
+      }
+    }
+  ]
+}

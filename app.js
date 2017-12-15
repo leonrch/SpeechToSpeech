@@ -22,62 +22,72 @@ var express = require('express'),
     errorhandler = require('errorhandler'),
     bluemix = require('./config/bluemix'),
     watson = require('watson-developer-cloud'),
-    Conversation = require('watson-developer-cloud/conversation/v1'),
     path = require('path'),
     fs = require('fs'),
+    unirest = require('unirest'),
+    ISO6391 = require('iso-639-1'),
     extend = require('util')._extend;
 
-
-// Serve static contend from  public directory
+// Setup static public directory
 app.use(express.static(path.join(__dirname , './public')));
-app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
 
 // Add error handling in dev
 if (!process.env.VCAP_SERVICES) {
   app.use(errorhandler());
 }
 
+
 // When running on Bluemix we will get config data from VCAP_SERVICES
 // and a user variable named VCAP_SERVICES
 // When running locally we will read config from 'vcap-local.json'
 var vcapServices = process.env.VCAP_SERVICES;
 if (!vcapServices) {
-  console.log ("No VCAP_SERVICES variable so create empty one")
+  console.log ("No VCAP_SERVICES variable so we will read vcap-local.json");
   vcapServices = {};
 } else {
   vcapServices = JSON.parse(vcapServices);
   console.log("Data from process.env.VCAP_SERVICES"+JSON.stringify(vcapServices));
 }
-var workspace_id = process.env.CONV_WORKSPACE_ID;
 if (fs.existsSync("vcap-local.json")) {
   //When running locally, the VCAP_SERVICES will not be set so read from vcap-local.json
-  // console.log ("Original env data "+JSON.stringify(vcapServices));
   var jsonData = fs.readFileSync("vcap-local.json", "utf-8");
   // console.log ("vcap-local.json contents\n"+jsonData);
   var localJSON = JSON.parse(jsonData);
-  console.log ("Parsed local data\n"+JSON.stringify(localJSON));
-  vcapServices = extend(vcapServices,localJSON.VCAP_SERVICES);
-  workspace_id = localJSON.CONV_WORKSPACE_ID
+  console.log ("Parsed local data: "+JSON.stringify(localJSON));
+  // we use extend to merge vcap-local.json with the environment variable
+  // if both exist, local wins
+  vcapServices = extend(vcapServices,localJSON);
 }
+//if (!vcapServices.speech_to_text || !vcapServices.text_to_speech || !vcapServices.language_translator)
+var stt_env = vcapServices.speech_to_text[0].credentials;
+console.log('STT configuration '+JSON.stringify(stt_env));
+var tts_env = vcapServices.text_to_speech[0].credentials;
+console.log('TTS configuration '+JSON.stringify(tts_env));
+var mt_env = vcapServices.language_translator[0].credentials;
+console.log('MT configuration '+JSON.stringify(mt_env));
+if (!stt_env)
+  throw('Incomplete configuration '+JSON.stringify(vcapServices));
 
-// Test here to check a workspace_id was specified
-if (!workspace_id)
-  throw new Error("No workspace id specified");
-else console.log ("Using workspace_id="+workspace_id);
-console.log ("Final service data "+JSON.stringify(vcapServices));
+var stt_credentials = {version: 'v1', url: stt_env.url, username: stt_env.username, password: stt_env.password};
+console.log('stt_credentials: '+JSON.stringify(stt_credentials));
+var tts_credentials = {version: 'v1', url: tts_env.url, username: tts_env.username, password: tts_env.password};
+console.log('tts_credentials: '+JSON.stringify(tts_credentials));
+var mt_credentials = {version: 'v2', url: mt_env.url, username: mt_env.username, password: mt_env.password};
+console.log('mt_credentials: '+JSON.stringify(mt_credentials));
 
-// -------------------------------- speech_to_text ---------------------------------
-var stt_credentials = {
-  version: 'v1',
-  url: 'https://stream.watsonplatform.net/speech-to-text/api',
-  username: vcapServices.speech_to_text[0].credentials.username,
-  password: vcapServices.speech_to_text[0].credentials.password
-};
+// ------------------------------- STT ---------------------------------
+// Get an authorization key for the STT service
 var authorization = watson.authorization(stt_credentials);
+if (authorization) {
+  console.log ('authorization: '+JSON.stringify(authorization));
+} else {
+  throw('Failed to get auth key for STT service');
+}
 
 // Get token from Watson using your credentials
 app.get('/token', function(req, res) {
-  console.log ("Getting a token with credentials "+JSON.stringify(stt_credentials));
+  //console.log ("Getting a token with credentials "+JSON.stringify(stt_credentials));
   authorization.getToken({url: stt_credentials.url}, function(err, token) {
     if (err) {
       console.log('getToken error:', err);
@@ -93,73 +103,118 @@ app.get('/token', function(req, res) {
   });
 });
 
-
-// -------------------------------- Conversation ---------------------------------
-
-// Create the service wrapper - use credentials from environment file is running locally or from VCAP_SERVICES on Bluemix
-var conv_credentials = extend({
-  "url": "https://gateway.watsonplatform.net/conversation/api",
-  version: 'v1',
-  username: vcapServices.conversation[0].credentials.username,
-  password: vcapServices.conversation[0].credentials.password,
-  version_date: Conversation.VERSION_DATE_2017_04_21
-}, bluemix.getServiceCreds('conversation'));
-var conversation = new Conversation(conv_credentials);
-
-// Endpoint to the conversation service that will be called from the client side
-app.post('/message', function(req, res) {
-  // console.log ('Message sent to conversation service: '+JSON.stringify(req));
-  //console.log ('Message sent to conversation service: '+req.body);
-  if (!workspace_id) {
-    console.log ("we can't respond because no workspace_id has been set");
-    return res.json({
-      'output': {
-        'text': 'The app has not been configured with a <b>WORKSPACE_ID</b> environment variable. Please refer to the '
-        + '<a href="https://github.com/bodonova/SpeakToWatson">README</a> documentation on how to set this variable. <br>'
-        + 'Once a workspace has been defined the intents may be imported from '
-        + '<a href="https://github.com/bodonova/SpeakToWatson/blob/master/car_workspace.json">here</a> in order to get a working application.'
-      }
-    });
-  }
-
-  var payload = {
-    workspace_id: workspace_id,
-    context: req.body.context || {},
-    input: req.body.input || {"text": ""}
-  };
-  payload = extend (payload, conv_credentials);
-  console.log ('payload: '+JSON.stringify(payload));
-
-  // Send the input to the conversation service
-  conversation.message(payload, function(err, data) {
-    if (err) {
-      console.log ('Sending a response for error code: '+err.code+' detail: '+err);
-      var err_text = 'Failed to connect to IBM Watson Conversation service - check your internet connection.\n'+err;
-      return res.status(500).json({
-        'output': {
-          'text': err_text
-          }}); // the converstion service returned an error
+// L.R.
+// ------------------------------- MT ---------------------------------
+var language_translation = watson.language_translation(mt_credentials);
+app.post('/api/translate', function(req, res, next) {
+  var params = extend({ 'X-WDC-PL-OPT-OUT': req.header('X-WDC-PL-OPT-OUT')}, req.body);
+  console.log(' ---> MT params: ' + JSON.stringify(params)); //L.R.
+  var url = mt_credentials.url + '/v2/translate?version=2017-07-01';
+  console.log(' ---> translation URL '+url+' param '+JSON.stringify(params));
+  unirest.post(url).header('Accept', 'application/json')
+  .header('X-Watson-Technology-Preview','2017-07-01')
+  .auth(mt_credentials.username, mt_credentials.password, true)
+  .send(params)
+  .end(function (response) {
+    if (response.error) {
+      console.log('new style call to get NMT models failed - try the old way');
+      language_translation.translate(params, function(err, models) {
+      if (err)
+        return next(err);
+      else
+        res.json(models);
+      });
+    } else {
+      console.log(' ---> response code: '+response.code+' JSON: '+JSON.stringify(response.body));
+      res.json(response.body);
     }
-    console.log ('Conversation service response: '+JSON.stringify(data));
-    return res.json(data);
   });
+
+  // calling the official library
+  // language_translation.translate(params, function(err, models) {
+  // if (err)
+  //   return next(err);
+  // else
+  //   res.json(models);
+  // });
 });
 
+app.get('/api/models', function(req, res, next) {
+  console.log('Server is getting a list of translation model for a browser client');
 
+  // get both the original MT models list and the new Neural MT type mtModels
+  var models_url = mt_credentials.url + '/v2/models?version=2017-07-01';
+  console.log(' ---> get NMT models URL '+models_url);
+  console.log ('user='+mt_credentials.username+" password="+mt_credentials.password)
+  unirest.get(models_url)
+  .header('Accept', 'application/json')
+  .header('X-Watson-Technology-Preview','2017-07-01')
+  .auth(mt_credentials.username, mt_credentials.password, true)
+  .send()
+  .end(function (response) {
+    console.log(' ---> NMT models response code: '+response.code+' JSON: '+JSON.stringify(response.body));
+    if (response.error) {
+        console.log('New style call to get models failed so try again the old way');
+        var params = {};
+        language_translation.getModels(params, function(err, models) {
+        if (err) {
+          console.log('old way failed also so give up')
+          return next(err);
+        } else {
+          console.log('Adding language names to returned JSON')
+          var mtModels = models.models;
+          //console.log("Original JSON: "+JSON.stringify(mtModels));
+          for (var i=0; i<mtModels.length; i++) {
+            mtModels[i].source_name = ISO6391.getName(mtModels[i].source);
+            mtModels[i].target_name = ISO6391.getName(mtModels[i].target);
+            //console.log(i+": Translate "+mtModels[i].source_name+" to "+mtModels[i].target_name+" with model "+mtModels[i].model_id);
+          }
+          //console.log("Enhanced JSON: "+JSON.stringify(mtModels));
+          console.log("returning "+mtModels.length+" MT models");
+          res.json(mtModels);
+        }
+      });
+    } else {
+      console.log('Adding language names to returned JSON')
+      var nmt_models = response.body.models;
+      // Get the name of each source/target language (it is easier done ofn the server)
+      for (var i=0; i<nmt_models.length; i++) {
+        nmt_models[i].source_name = ISO6391.getName(nmt_models[i].source);
+        nmt_models[i].target_name = ISO6391.getName(nmt_models[i].target);
+        console.log(" NMT model "+i+": Translate "+nmt_models[i].source_name+" to "+nmt_models[i].target_name+" with model "+nmt_models[i].model_id);
+      }
+      res.json(nmt_models);
+    }
+  });
+
+  // The official way of doing it
+  // language_translation.getModels(params, function(err, models) {
+  //   if (err) {
+  //     return next(err);
+  //   } else {
+  //     var mtModels = models.models;
+  //     //console.log("Original JSON: "+JSON.stringify(mtModels));
+  //     for (var i=0; i<mtModels.length; i++) {
+  //       mtModels[i].source_name = ISO6391.getName(mtModels[i].source);
+  //       mtModels[i].target_name = ISO6391.getName(mtModels[i].target);
+  //       //console.log(i+": Translate "+mtModels[i].source_name+" to "+mtModels[i].target_name+" with model "+mtModels[i].model_id);
+  //     }
+  //     //console.log("Enhanced JSON: "+JSON.stringify(mtModels));
+  //     console.log("returning "+mtModels.length+" MT models");
+  //     res.json(mtModels);
+  //   }
+  // });
+});
+
+// ----------------------------------------------------------------------
+
+// L.R.
 // -------------------------------- TTS ---------------------------------
-var tts_credentials = extend({
-  url: 'https://stream.watsonplatform.net/text-to-speech/api',
-  version: 'v1',
-  username: vcapServices.text_to_speech[0].credentials.username,
-  password: vcapServices.text_to_speech[0].credentials.password
-}, bluemix.getServiceCreds('text_to_speech'));
-
-// Create the service wrappers
 var textToSpeech = watson.text_to_speech(tts_credentials);
 
 app.get('/synthesize', function(req, res) {
-  console.log ("Synthesizing response: "+JSON.stringify(req.query));
   var transcript = textToSpeech.synthesize(req.query);
+  console.log ('synthesize query: '+JSON.stringify(req.query));
   transcript.on('response', function(response) {
     if (req.query.download) {
       response.headers['content-disposition'] = 'attachment; filename=transcript.ogg';
@@ -186,6 +241,8 @@ if (!!process.env.VCAP_SERVICES) {
   });
 }
 
+// start listening
 var port = process.env.VCAP_APP_PORT || 3000;
-app.listen(port);
+app.listen(port).on('error', console.log);
+
 console.log('listening at:', port);

@@ -1,392 +1,206 @@
+# SpeechToSpeech
+# Speech to Speech Browser Application
 
-# Speak to Watson Browser Application
+  The application uses IBM's speech recognition, machine translation, and voice synthesis capabilities to instantly translate speech to another language and reads the translation aloud. This is heavily based on the https://github.com/leonrch/SpeechToSpeech sample (the only significant change is the addition of support for German and the switch to using the neural network model based machine translation)
 
-The application leverages IBM's speech recognition and voice synthesis capabilities to allow users to use their voice to interact with the IBM Watson Conversation service.
+  This code is hosted on two instances of GIT. One is used for public perusal of the code and one is used as part of the deployment toolchain. If you are pushing changes to this project make sure to push it to both GUT repositories. Your environment will be automatically configured to push back changes to the repository that you originally cloned, but use one of the commands below:
+
+  ```sh
+  $ git add remote github git@github.com:bodonova/SpeechToGerman.git
+  $ git push -u github
+  ```
+
+  or
+
+  ```sh
+  $ git add remote bluemix git@git.ng.bluemix.net:brian_odonovan/speech-to-speech-app.git
+  $ git push -u bluemix
+  ```
 
 Give it a try! Click the button below to fork into IBM DevOps Services and deploy your own copy of this application on Bluemix.
 
-[![Deploy to Bluemix](https://bluemix.net/deploy/button.png)](https://bluemix.net/deploy?repository=https://github.com/bodonova/SpeakToWatson)
+[![Deploy to Bluemix](https://bluemix.net/deploy/button.png)](https://bluemix.net/deploy?repository=hhttps://github.com/bodonova/SpeechToGerman)
 
 ## Getting Started
 
 1. Create a Bluemix Account
 
-  [Sign up](https://apps.admin.ibmcloud.com/manage/trial/bluemix.html?cm_mmc=WatsonDeveloperCloud-_-LandingSiteGetStarted-_-x-_-CreateAnAccountOnBluemixCLI) in Bluemix, or use an existing account. IBM Watson services are free to use once you stick within certain limits.
+    [Sign up][sign_up] in Bluemix, or use an existing account. Watson Services in Beta are free to use.
 
-2. Download and install the [Cloud-foundry CLI](https://github.com/cloudfoundry/cli) tool
+2. Download and install the [Cloud-foundry CLI][cloud_foundry] tool
 
 3. Edit the `manifest.yml` file and change the `<application-name>` to something unique.
-      ```none
-    ---
-    declared-services:
-      speech-to-text-service:
-        label: speech_to_text
-        plan: standard
-      conversation-service:
-        label: conversation
-        plan: free
-      text-to-speech-service:
-        label: text_to_speech
-        plan: standard
-    applications:
-    - name: <application name>
-      command: node app.js
-      buildpack: sdk-for-nodejs
-      path: .
-      memory: 256m
-      services:
-      - speech-to-text-service
-      - conversation-service
-      - text-to-speech-service
-      ```
+  ```none
+---
+declared-services:
+  speech-to-text-service-standard:
+    label: speech_to_text
+    plan: standard
+  language-translation-service:
+    label: language_translation
+    plan: standard
+  text-to-speech-service:
+    label: text_to_speech
+    plan: standard
+applications:
+- name: <application name>
+  command: node app.js
+  buildpack: sdk-for-nodejs
+  path: .
+  memory: 256m
+  services:
+  - speech-to-text-service-standard
+  - language-translation-service
+  - text-to-speech-service
+  ```
+  The name you use will determinate your application url initially, e.g. `<application-name>.mybluemix.net`.
 
-  The application name you choose will determinate your application url initially, e.g. `<application-name>.mybluemix.net`. It must be unique to avoid clashing with other applications deployed to Bluemix.
+4. Install [Node.js](http://nodejs.org/)
 
-4. Connect to Bluemix in the command line tool.
+5. Install project dependencies and build browser application:
+  ```sh
+  $ npm install
+  $ npm build
+  ```
+
+6. Connect to Bluemix in the command line tool.
   ```sh
   $ cf api https://api.ng.bluemix.net
   $ cf login -u <your user ID>
   ```
 
-5. Create the following three services in Bluemix.
+7. Create the following three services in Bluemix.
   ```sh
-  $ cf create-service speech_to_text standard speech-to-text-service
+  $ cf create-service speech_to_text standard speech-to-text-service-standard
   $ cf create-service text_to_speech standard text-to-speech-service
-  $ cf create-service conversation free conversation-service
+  $ cf create-service language_translation standard language-translation-service
   ```
 
-6. Import the conversation definition from JSON as described in the <a href="#workspace"> Workspace section of this document</a>
-
-7. Create an environment variable to store the workspace ID for your conversation workspace.
-
-  ```sh
-  $ cf set-env <application_name> CONV_WORKSPACE_ID <workspace_id>
-  ```
-
-8. If you want to run your application on Bluemix, push it live.
-
+8. Push it live!
   ```sh
   $ cf push
   ```
-
-  One of the last messages from this command will tell you the URL
-  where you can see the application in action e.g. [http://<application_name>.mybluemix.net](http://<application_name>.mybluemix.net)
-
-  If you want to run locally, see the instructions below.
+See the full [Getting Started][getting_started] documentation for more details, including code snippets and references.
 
 ## Running locally
 
-1. In order to run the application locally, you will need to create a file `vcap-local.json` which will contain your configuration. This needs to contain the credentials from your `speech-to-text-service`, `conversation-service` and `text-to-speech-service` services in Bluemix along with conversation workspace ID.
+  The application uses [Node.js](http://nodejs.org/) and [npm](https://www.npmjs.com/) so you will have to download and install them as part of the steps below.
 
-  You can see the values you need for this file using this command:
+1. When running on Bluemix, the system looks after connecting the application with the Watson services that it uses. However, when you are running locally, you need to create a `vcap-local.json` file to tell the application running locally on your laptop how to connect to the various  Watson services you need  
 
-  ```sh
-  $ cf env <application-name>
-  ```
+  **Note:** While it is possible to run the application locally, this does not mean that the application can run without an internet connection. It is essential for this application to be able to connect to the Watson services running in the cloud.
 
-  Example output:
+  If you already have deployed the application to Bluemix, the easiest way to create a `vcap-local.json` file is to simply copy the configuration variables from Bluemix using the commands below.
 
-  ```
-  System-Provided:
-  {
-   "VCAP_SERVICES": {
-    "AvailabilityMonitoring": [
-     {
-      "credentials": {
-       "cred_url": "https://perfbroker.au-syd.bluemix.net",
-       "token": " ... "
-      },
-      "label": "AvailabilityMonitoring",
-      "name": "availability-monitoring-auto",
-      "plan": "Lite",
-      "provider": null,
-      "syslog_drain_url": null,
-      "tags": [
-       "ibm_created",
-       "bluemix_extensions",
-       "dev_ops",
-       "lite"
-      ],
-      "volume_mounts": []
-     }
-    ],
-    "conversation": [
-     {
-      "credentials": {
-       "password": "conv_password",
-       "url": "https://gateway.watsonplatform.net/conversation/api",
-       "username": "conv_username"
-      },
-      "label": "conversation",
-      "name": "conversation-service",
-      "plan": "free",
-      "provider": null,
-      "syslog_drain_url": null,
-      "tags": [
-       "watson",
-       "ibm_created",
-       "ibm_dedicated_public",
-       "lite"
-      ],
-      "volume_mounts": []
-     }
-    ],
-    "speech_to_text": [
-     {
-      "credentials": {
-       "password": "stt_password",
-       "url": "https://stream.watsonplatform.net/speech-to-text/api",
-       "username": "stt_username"
-      },
-      "label": "speech_to_text",
-      "name": "speech-to-text-service",
-      "plan": "standard",
-      "provider": null,
-      "syslog_drain_url": null,
-      "tags": [
-       "watson",
-       "ibm_created",
-       "ibm_dedicated_public"
-      ],
-      "volume_mounts": []
-     }
-    ],
-    "text_to_speech": [
-     {
-      "credentials": {
-       "password": "<tts_password>",
-       "url": "https://stream.watsonplatform.net/text-to-speech/api",
-       "username": "<tts_user>"
-      },
-      "label": "text_to_speech",
-      "name": "text-to-speech-service",
-      "plan": "standard",
-      "provider": null,
-      "syslog_drain_url": null,
-      "tags": [
-       "watson",
-       "ibm_created",
-       "ibm_dedicated_public"
-      ],
-      "volume_mounts": []
-     }
-    ]
-   }
-  }
+    ```sh
+    $ cf env <application-name>
+    ```
+    Example output:
+    ```sh
+	System-Provided:
+	{
+	 "VCAP_SERVICES": {
+	  "language_translation": [
+	   {
+		"credentials": {
+		 "password": "lt-password",
+		 "url": "https://gateway.watsonplatform.net/language-translation/api",
+		 "username": "lt-username"
+		},
+		"label": "language_translation",
+		"name": "language-translation-service",
+		"plan": "standard",
+		"provider": null,
+		"syslog_drain_url": null,
+		"tags": [
+		 "watson",
+		 "ibm_created",
+		 "ibm_dedicated_public",
+		 "ibm_deprecated"
+		]
+	   }
+	  ],
+	  "speech_to_text": [
+	   {
+		"credentials": {
+		 "password": "stt-password",
+		 "url": "https://stream.watsonplatform.net/speech-to-text/api",
+		 "username": "stt-username"
+		},
+		"label": "speech_to_text",
+		"name": "speech-to-text-service-standard",
+		"plan": "standard",
+		"provider": null,
+		"syslog_drain_url": null,
+		"tags": [
+		 "watson",
+		 "ibm_created",
+		 "ibm_dedicated_public"
+		]
+	   }
+	  ],
+	  "text_to_speech": [
+	   {
+		"credentials": {
+		 "password": "tts-password",
+		 "url": "https://stream.watsonplatform.net/text-to-speech/api",
+		 "username": "tts-username"
+		},
+		"label": "text_to_speech",
+		"name": "text-to-speech-service",
+		"plan": "standard",
+		"provider": null,
+		"syslog_drain_url": null,
+		"tags": [
+		 "watson",
+		 "ibm_created",
+		 "ibm_dedicated_public"
+		]
+	   }
+	  ]
+	 }
+	}
+    ```
+    You need to copy the entire content of the `VCAP_SERVICES` variable into your `vcap-local.json` file. This hass all of the cnfiguration variables needed by the application
 
-  {
-   "VCAP_APPLICATION": {
-    "application_id": "<application_id>",
-    "application_name": "<application_name>",
-    "application_uris": [
-     "<application_name>-app.au-syd.mybluemix.net"
-    ],
-    "application_version": "...",
-    "cf_api": "https://api.au-syd.bluemix.net",
-    "limits": {
-     "disk": 1024,
-     "fds": 16384,
-     "mem": 256
-    },
-    "name": "<application_name>",
-    "space_id": "<space_id>",
-    "space_name": "Australia",
-    "uris": [
-     "<application_name>.au-syd.mybluemix.net"
-    ],
-    "users": null,
-    "version": "..... "
-   }
-  }
-
-  User-Provided:
-  CONV_WORKSPACE_ID: <workspace_id>
-
-  Running Environment Variable Groups:
-  BLUEMIX_REGION: ibm:yp:au-syd
-
-  Staging Environment Variable Groups:
-  BLUEMIX_REGION: ibm:yp:au-syd
-  ```
-
-  You need to copy the contents of the VCAP_SERVICES variable into a new file named vcap-local.json.
-
-  You also need to add a CONV_WORKSPACE_ID variable to this structure, using the ID of the workspace you created in the [workspace section](#workspace). If you haved forgotten it, it should be listed in the output from the _cf env_ command.
-
-  You will end up with a file like:
-
-  ```
-  {
-  "CONV_WORKSPACE_ID": "<workspace_id>",   
-   "VCAP_SERVICES": {
-    "AvailabilityMonitoring": [
-     {
-      "credentials": {
-       "cred_url": "https://perfbroker.au-syd.bluemix.net",
-       "token": " ... "
-      },
-      "label": "AvailabilityMonitoring",
-      "name": "availability-monitoring-auto",
-      "plan": "Lite",
-      "provider": null,
-      "syslog_drain_url": null,
-      "tags": [
-       "ibm_created",
-       "bluemix_extensions",
-       "dev_ops",
-       "lite"
-      ],
-      "volume_mounts": []
-     }
-    ],
-    "conversation": [
-     {
-      "credentials": {
-       "password": "conv_password",
-       "url": "https://gateway.watsonplatform.net/conversation/api",
-       "username": "conv_username"
-      },
-      "label": "conversation",
-      "name": "conversation-service",
-      "plan": "free",
-      "provider": null,
-      "syslog_drain_url": null,
-      "tags": [
-       "watson",
-       "ibm_created",
-       "ibm_dedicated_public",
-       "lite"
-      ],
-      "volume_mounts": []
-     }
-    ],
-    "speech_to_text": [
-     {
-      "credentials": {
-       "password": "stt_password",
-       "url": "https://stream.watsonplatform.net/speech-to-text/api",
-       "username": "stt_username"
-      },
-      "label": "speech_to_text",
-      "name": "speech-to-text-service",
-      "plan": "standard",
-      "provider": null,
-      "syslog_drain_url": null,
-      "tags": [
-       "watson",
-       "ibm_created",
-       "ibm_dedicated_public"
-      ],
-      "volume_mounts": []
-     }
-    ],
-    "text_to_speech": [
-     {
-      "credentials": {
-       "password": "<tts_password>",
-       "url": "https://stream.watsonplatform.net/text-to-speech/api",
-       "username": "<tts_user>"
-      },
-      "label": "text_to_speech",
-      "name": "text-to-speech-service",
-      "plan": "standard",
-      "provider": null,
-      "syslog_drain_url": null,
-      "tags": [
-       "watson",
-       "ibm_created",
-       "ibm_dedicated_public"
-      ],
-      "volume_mounts": []
-     }
-    ]
-   }
-  }
-  ```
-
-2. Next, you need to install [Node.js](http://nodejs.org/)
+2. Install [Node.js](http://nodejs.org/)
 
 3. To install project dependencies, go to the project folder in a terminal and run:
-
-  ```sh
-  $ npm install
-  ```
+    ```sh
+    $ npm install
+    ```
 
 4. Then, build the browser application:
 
-  ```sh
-  $ npm build
-  ```
+    ```sh
+    $ npm build
+    ```
 
 5. Start the application:
+    ```sh
+    $ node app.js
+    ```
 
-  ```sh
-  $ node app.js
-  ```
-
-6. Go to: [http://localhost:3000](http://localhost:3000) to try out the application.
-
-## Workspace
-
-To use the app you're creating, you need to add a workspace to your Conversation service. A workspace is a container for all the artifacts that define the behavior of your service (ie: intents, entities and chat flows). For this sample app, you can either use a workspace you already have or use the car related workspace from the [Simple Conversation](https://github.com/watson-developer-cloud/conversation-simple) sample.
-
-For more information on workspaces, see the full  [Conversation service  documentation](https://console.bluemix.net/docs/services/conversation/getting-started.html#gettingstarted).
-
-1. Navigate to the Bluemix dashboard, select the Conversation service that you created.
-
-2. Go to the **Manage** menu item and select **Launch Tool**. This opens a new tab in your browser, where you are prompted to login if you have not done so before. Use your Bluemix credentials.
-
-3. If you are deploying through Bluemix, download the [exported JSON file](https://raw.githubusercontent.com/bodonova/SpeakToWatson/master/car_workspace.json) that contains the Workspace contents. If deploying locally,  this was cloned and is in the root folder (car_workspace.json).
-
-4. Select the import icon: ![](readme_images/importGA.PNG). Browse to (or drag and drop) the JSON file. Choose to import **Everything(Intents, Entities, and Dialog)**. Then select **Import** to finish importing the workspace.
-
-5. Refresh your browser. A new workspace tile is created within the tooling. Select the _menu_ button within the workspace tile, then select **View details**:
-
-  ![Workpsace Details](readme_images/details.PNG)
-
-  In the Details UI, copy the 36 character UNID **ID** field. This is the **Workspace ID**.
-
-  ![](readme_images/workspaceid.PNG)
-
-6. Now you need to add this workspace ID to the configuration of your sample application. See instructions below.
-
-# Adding environment variables in Bluemix via the web UI
-
-If you are not comfortable manipulating environment variables using the _cf_ command line tool, you can also manipulate them using the web UI.
-
-1. In Bluemix, open the application from the Dashboard. Select **Environment Variables**.
-
-2. Select **USER-DEFINED**.
-
-3. Select **ADD**.
-
-4. Add a variable with the name **CONV_WORKSPACE_ID**. For the value, paste in the ID of the Workspace you [created earlier](#workspace). Select **SAVE**.
-
-5. Return to the deploy steps that you were following:
-
-## Learn more
-
-See the full [Getting Started](https://console.bluemix.net/docs/services/watson/index.html#about) documentation for more information about IBM Watson services.
+6. Go to: [http://localhost:3000](http://localhost:3000)
 
 ## Troubleshooting
 
 To troubleshoot your Bluemix app the main useful source of information are the logs, to see them, run:
 
-```sh
-$ cf logs <application-name> --recent
-```
+  ```sh
+  $ cf logs <application-name> --recent
+  ```
 
 ## License
 
-This sample code is licensed under Apache 2.0. Full license text is available in [LICENSE](LICENSE).
+  This sample code is licensed under Apache 2.0. Full license text is available in [LICENSE](LICENSE).
 
 ## Contributing
 
-See [CONTRIBUTING](CONTRIBUTING.md).
+  See [CONTRIBUTING](CONTRIBUTING.md).
 
 ## Open Source @ IBM
-
-Find more open source projects on the [IBM Github Page](http://ibm.github.io/)
+  Find more open source projects on the [IBM Github Page](http://ibm.github.io/)
 
 [cloud_foundry]: https://github.com/cloudfoundry/cli
 [getting_started]: http://www.ibm.com/smarterplanet/us/en/ibmwatson/developercloud/doc/getting_started/

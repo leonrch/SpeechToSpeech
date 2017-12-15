@@ -3,19 +3,19 @@ declared-services:
   speech-to-text-service:
     label: speech_to_text
     plan: standard
-  conversation-service:
-    label: conversation
-    plan: free
+  Language-MT:
+    label: language_translation
+    plan: standard
   text-to-speech-service:
     label: text_to_speech
     plan: standard
 applications:
-- name: speak-to-watson-app
+- name: speech-to-speech-app
   command: node app.js
   buildpack: sdk-for-nodejs
   path: .
   memory: 256m
   services:
   - speech-to-text-service
-  - conversation-service
+  - Language-MT
   - text-to-speech-service
